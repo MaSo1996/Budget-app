@@ -1,5 +1,4 @@
-.container.main-container {
-  width: 66%;
+.container {
   margin-top: 100px;
   background-color: white;
   border-color: black;
@@ -14,10 +13,18 @@ body {
 .btn {
   background-color: rgb(75, 0, 130);
   color: white;
-  width: 250px;
+  width: 300px;
 }
 
 .btn:hover {
   background-color: white;
   color: black;
+}
+
+.no-button {
+  background-color: red;
+}
+
+.yes-button {
+  background-color: green;
 }
