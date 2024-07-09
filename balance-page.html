@@ -16,6 +16,12 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://www.google.com/jsapi"></script>
   </head>
   <body>
     <div class="container">
@@ -53,74 +59,134 @@
       </div>
       <div class="row">
         <div class="col-sm-6 text-center">
-          <table class="table caption-top">
+          <table class="table caption-top expanses">
             <caption>
               Przychody
             </caption>
             <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
+                <th scope="col">Kategoria przychodu</th>
+                <th scope="col">Suma z wybranego okresu</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <th scope="row">Wynagrodzenie</th>
+                <td>6500.00</td>
               </tr>
               <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
+                <th scope="row">Odsetki bankowe</th>
+                <td>123.50</td>
               </tr>
               <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
+                <th scope="row">Sprzedaż na allegro</th>
+                <td>100.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Inne</th>
+                <td>50.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Przychody łącznie</th>
+                <td>6823,50</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="col-sm-6 text-center">
-          <table class="table caption-top">
+          <table class="table caption-top expanses">
             <caption>
               Wydatki
             </caption>
             <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
+                <th scope="col">Kategoria wydatku</th>
+                <th scope="col">Suma z wybranego okresu</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <th scope="row">Jedzenie</th>
+                <td>400.00</td>
               </tr>
               <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
+                <th scope="row">Mieszkanie</th>
+                <td>1450.00</td>
               </tr>
               <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
+                <th scope="row">Transport</th>
+                <td>300.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Telekomunikacja</th>
+                <td>100.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Opieka zdrowotna</th>
+                <td>150.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Ubranie</th>
+                <td>150.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Higienia</th>
+                <td>50.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Dzieci</th>
+                <td>0.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Rozrywka</th>
+                <td>150.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Wycieczka</th>
+                <td>70.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Szkolenia</th>
+                <td>1000.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Książki</th>
+                <td>25.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Oszczędności</th>
+                <td>100.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Na złotą jesień, czyli emeryturę</th>
+                <td>100.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Spłata długów</th>
+                <td>0.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Darowizna</th>
+                <td>0.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Inne wydatki</th>
+                <td>150.00</td>
+              </tr>
+              <tr>
+                <th scope="row">Wydatki łącznie</th>
+                <td>4195,00</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+      <div class="row">
+        <div class="col">
+          <div id="piechart_3d" style="width: 100%; min-height: 450px"></div>
+        </div>
+      </div>
     </div>
+    <script src="./script.js"></script>
   </body>
 </html>

@@ -28,3 +28,7 @@ body {
 .yes-button {
   background-color: green;
 }
+
+table {
+  border: 3px solid black;
+}
