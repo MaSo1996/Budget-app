@@ -35,30 +35,30 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="navbar-collapse collapse" id="navbarsExample03" style="">
+        <div class="navbar-collapse collapse" id="navbarsExample03">
           <ul class="navbar-nav me-auto mb-2 mb-sm-0">
             <li class="nav-item">
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="./home-page.html"
+                href="./index.php"
                 >Strona główna</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./sign-up-page.html">Rejestracja</a>
+              <a class="nav-link" href="./sign-up-page.php">Rejestracja</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./log-in-page.html">Logowanie</a>
+              <a class="nav-link" href="./log-in-page.php">Logowanie</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./menu.html">Menu główne</a>
+              <a class="nav-link" href="./menu.php">Menu główne</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./add-expanse.html">Dodaj wydatek</a>
+              <a class="nav-link" href="./add-expanse.php">Dodaj wydatek</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./balance-page.html"
+              <a class="nav-link" href="./balance-page.php"
                 >Przeglądaj bilans</a
               >
             </li>
@@ -83,12 +83,12 @@
           </div>
           <div class="row">
             <div class="col-sm">
-              <a href="./log-in-page.html">
+              <a href="./log-in-page.php">
                 <button class="btn btn-primary btn-lg px-4 me-sm-3 mb-3">
                   Zaloguj się
                 </button></a
               >
-              <a href="./sign-up-page.html">
+              <a href="./sign-up-page.php">
                 <button class="btn btn-primary btn-lg px-4 me-sm-3 mb-3">
                   Zarejestruj się
                 </button></a

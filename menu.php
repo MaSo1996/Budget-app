@@ -35,27 +35,27 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="navbar-collapse collapse" id="navbarsExample03" style="">
+        <div class="navbar-collapse collapse" id="navbarsExample03">
           <ul class="navbar-nav me-auto mb-2 mb-sm-0">
             <li class="nav-item">
-              <a class="nav-link" href="./home-page.html">Strona główna</a>
+              <a class="nav-link" href="./index.php">Strona główna</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./sign-up-page.html">Rejestracja</a>
+              <a class="nav-link" href="./sign-up-page.php">Rejestracja</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./log-in-page.html">Logowanie</a>
+              <a class="nav-link" href="./log-in-page.php">Logowanie</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="./menu.html"
+              <a class="nav-link active" aria-current="page" href="./menu.php"
                 >Menu główne</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./add-expanse.html">Dodaj wydatek</a>
+              <a class="nav-link" href="./add-expanse.php">Dodaj wydatek</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./balance-page.html"
+              <a class="nav-link" href="./balance-page.php"
                 >Przeglądaj bilans</a
               >
             </li>
@@ -79,7 +79,7 @@
                     Dodaj przychód
                   </button>
                 </a>
-                <a href="./add-expanse.html">
+                <a href="./add-expanse.php">
                   <button
                     type="button"
                     class="btn btn-primary btn-lg px-4 me-sm-3 mb-3"
@@ -91,7 +91,7 @@
             </div>
             <div class="row">
               <div class="col-sm">
-                <a href="./balance-page.html">
+                <a href="./balance-page.php">
                   <button
                     type="button"
                     class="btn btn-primary btn-lg px-4 me-sm-3 mb-3"

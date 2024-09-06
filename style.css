@@ -8,6 +8,7 @@
 
 body {
   background: linear-gradient(45deg, rgba(195,41,214,1) 34%, rgba(132,0,255,0.8072362734156162) 51%);
+  color: black;
 }
 
 .btn {
@@ -39,4 +40,8 @@ table {
 
 .positive-message {
   color: green;
+}
+
+.error {
+  color: red;
 }
