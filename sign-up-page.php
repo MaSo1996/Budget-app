@@ -44,20 +44,41 @@ if (isset($_POST['email'])) {
   $_SESSION['frEmail'] = $email;
   $_SESSION['frPassword1'] = $password1;
   $_SESSION['frPassword2'] = $password2;
-}
 
-require 'config.php';
+  require 'config.php';
 
-$dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
+  $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 
-try {
-	$pdo = new PDO($dsn, $user, $password);
+  try {
+    $pdo = new PDO($dsn, $user, $password);
 
-	if ($pdo) {
-		$pdo->query("INSERT INTO users VALUES(null,'$email','$nick','$passwordHash')");
-	}
-} catch (PDOException $e) {
-	echo $e->getMessage();
+    if ($pdo) {
+      $whatToLookFor = $pdo->query("SELECT users.email from users where users.email like '$email'");
+
+      $howManyEmails = $whatToLookFor->rowCount();
+
+      if ($howManyEmails !== 0) {
+        $validationSuccess = false;
+        $_SESSION['eEmail'] = "Istnieje już konto przypisane do tego adresu e-mail.";
+      }
+
+      $whatToLookFor = $pdo->query("SELECT users.name from users where users.name like '$nick'");
+
+      $howManyNicks = $whatToLookFor->rowCount();
+
+      if ($howManyNicks !== 0) {
+        $validationSuccess = false;
+        $_SESSION['eNick'] = "Istnieje już konto z takim nickiem.";
+      }
+
+      if ($validationSuccess) {
+        $pdo->query("INSERT INTO users VALUES(null,'$email','$nick','$passwordHash')");
+        header('Location: menu.php');
+      }
+    }
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+  }
 }
 
 ?>
