@@ -73,7 +73,11 @@ if (isset($_POST['email'])) {
 
       if ($validationSuccess) {
         $pdo->query("INSERT INTO users VALUES(null,'$email','$nick','$passwordHash')");
-        header('Location: menu.php');
+        $_SESSION['registrationSuccessfull'] = true;
+
+        $pdo = null;
+
+        header('Location: welcome.php');
       }
     }
   } catch (PDOException $e) {
