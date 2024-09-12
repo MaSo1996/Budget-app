@@ -77,7 +77,7 @@ if (isset($_POST['email'])) {
 
         $pdo = null;
 
-        header('Location: welcome.php');
+        header('Location: ./welcome.php');
       }
     }
   } catch (PDOException $e) {

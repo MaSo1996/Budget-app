@@ -1,3 +1,53 @@
+<?php
+
+session_start();
+
+if (!isset($_SESSION['loggedUser'])) {
+  header("Location: ./welcome.php");
+}
+
+$validationSuccess = true;
+
+if (isset($_POST['amount'])) {
+
+  $amount = str_replace(',','.',$_POST['amount']);
+  
+  if (!is_numeric($amount)) {
+    $_SESSION['eAmount'] = 'Podaj kwotę we właściwym formacie.';
+    $validationSuccess = false;
+  }
+
+  if (empty($_POST['date'])) {
+    $_SESSION['eDate'] = 'Podaj datę wydatku.';
+    $validationSuccess = false;
+  }
+
+  $loggedUser = $_SESSION['loggedUser'];
+  $date = $_POST['date'];
+  $comment = $_POST['comment'];
+  $paymentMethod = $_POST['paymentMethod'];
+  $expandCategory = $_POST['expandCategory'];
+
+  require 'config.php';
+
+  $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
+
+  if ($validationSuccess) {
+    try {
+      $pdo = new PDO($dsn, $user, $password);
+
+      if ($pdo) {
+        $query = $pdo->prepare("INSERT INTO expanses VALUES(null,'$loggedUser','$amount','$date','$comment','$paymentMethod','$expandCategory')");
+        $query->execute();
+      }
+    } catch (PDOException $e) {
+      echo $e->getMessage();
+    }
+  }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -60,17 +110,27 @@
     </div>
   </nav>
   <div class="container">
-    <form action="">
+    <form method="post">
       <div class="row justify-content-center">
         <div class="col-sm-6">
           <div class="mb-3 mt-3">
             <label for="exampleFormControlInput1" class="form-label">Kwota</label>
             <input
-              type="number"
+              type="text"
               class="form-control"
               id="exampleFormControlInput1"
               placeholder="12.14"
               name="amount" />
+            <div class="error">
+              <?php
+
+              if (isset($_SESSION['eAmount'])) {
+                echo $_SESSION['eAmount'];
+                unset($_SESSION['eAmount']);
+              }
+
+              ?>
+            </div>
           </div>
           <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Data</label>
@@ -80,6 +140,16 @@
               id="exampleFormControlInput2"
               placeholder="2024.12.12"
               name="date" />
+            <div class="error">
+              <?php
+
+              if (isset($_SESSION['eDate'])) {
+                echo $_SESSION['eDate'];
+                unset($_SESSION['eDate']);
+              }
+
+              ?>
+            </div>
           </div>
           <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Komentarz</label>
@@ -94,7 +164,7 @@
         <div class="row text-center">
           <div class="col">
             <div>
-              <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="paymentMethod" id="paymentMethod">
+              <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="paymentMethod" id="paymentMethod" required>
                 <option value="" disabled selected>Wybierz sposób płatności</option>
                 <option value="Gotówka">Gotówka</option>
                 <option value="Karta debetowa">Karta debetowa</option>
@@ -102,7 +172,7 @@
               </select>
             </div>
             <div>
-              <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="expandCategory" id="paymentMethod">
+              <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="expandCategory" id="expandCategory" required>
                 <option value="" disabled selected>Wybierz kategorię wydatku</option>
                 <option value="Jedzenie">Jedzenie</option>
                 <option value="Mieszkanie">Mieszkanie</option>
@@ -126,10 +196,12 @@
         </div>
         <div class="row text-center">
           <div class="col-sm">
-            <button class="yes-button btn btn-primary btn-lg px-4 me-sm-3 mb-3">
-              Dodaj wydatek</button><button class="no-button btn btn-primary btn-lg px-4 me-sm-3 mb-3">
-              Anuluj
-            </button>
+            <input type="submit" class="yes-button btn btn-primary btn-lg px-4 me-sm-3 mb-3" value="Dodaj wydatek">
+            <a href="./menu.php">
+              <button type="button" class="no-button btn btn-primary btn-lg px-4 me-sm-3 mb-3">
+                Anuluj
+              </button>
+            </a>
           </div>
         </div>
     </form>
