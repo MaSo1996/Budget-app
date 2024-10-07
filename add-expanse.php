@@ -133,11 +133,11 @@ if (isset($_POST['amount'])) {
             </div>
           </div>
           <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Data</label>
+            <label for="dateOfExpanse" class="form-label">Data</label>
             <input
               type="date"
               class="form-control"
-              id="exampleFormControlInput2"
+              id="dateOfExpanse"
               placeholder="2024.12.12"
               name="date" />
             <div class="error">
@@ -152,11 +152,11 @@ if (isset($_POST['amount'])) {
             </div>
           </div>
           <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Komentarz</label>
+            <label for="comment" class="form-label">Komentarz</label>
             <input
               type="text"
               class="form-control"
-              id="exampleFormControlInput2"
+              id="comment"
               placeholder="(Opcjonalnie)"
               name="comment" />
           </div>
