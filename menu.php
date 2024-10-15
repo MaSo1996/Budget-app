@@ -70,7 +70,7 @@
           <div class="col mx-auto">
             <div class="row">
               <div class="col-sm">
-                <a href="">
+                <a href="./add-income.php">
                   <button
                     type="button"
                     class="btn btn-primary btn-lg px-4 me-sm-3 mb-3"
