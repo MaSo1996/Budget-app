@@ -178,7 +178,7 @@ if (isset($_POST['amount'])) {
         </div>
         <div class="row text-center">
           <div class="col-sm">
-            <input type="submit" class="yes-button btn btn-primary btn-lg px-4 me-sm-3 mb-3" value="Dodaj wydatek">
+            <input type="submit" class="yes-button btn btn-primary btn-lg px-4 me-sm-3 mb-3" value="Dodaj przychód">
             <a href="./menu.php">
               <button type="button" class="no-button btn btn-primary btn-lg px-4 me-sm-3 mb-3">
                 Anuluj
