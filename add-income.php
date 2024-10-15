@@ -25,8 +25,7 @@ if (isset($_POST['amount'])) {
   $loggedUser = $_SESSION['loggedUser'];
   $date = $_POST['date'];
   $comment = $_POST['comment'];
-  $paymentMethod = $_POST['paymentMethod'];
-  $expandCategory = $_POST['expandCategory'];
+  $incomeCategory = $_POST['incomeCategory'];
 
   require 'config.php';
 
@@ -37,7 +36,7 @@ if (isset($_POST['amount'])) {
       $pdo = new PDO($dsn, $user, $password);
 
       if ($pdo) {
-        $query = $pdo->prepare("INSERT INTO expanses VALUES(null,'$loggedUser','$amount','$date','$comment','$paymentMethod','$expandCategory')");
+        $query = $pdo->prepare("INSERT INTO incomes VALUES(null,'$loggedUser','$amount','$date','$comment','$incomeCategory')");
         $query->execute();
       }
     } catch (PDOException $e) {
@@ -54,7 +53,7 @@ if (isset($_POST['amount'])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dodaj wydatek</title>
+  <title>Dodaj przychód</title>
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
@@ -68,7 +67,7 @@ if (isset($_POST['amount'])) {
 </head>
 
 <body>
-  <nav
+<nav
     class="navbar navbar-expand-sm navbar-dark bg-dark"
     aria-label="Third navbar example">
     <div class="container-fluid">
@@ -100,10 +99,10 @@ if (isset($_POST['amount'])) {
             <a class="nav-link" href="./menu.php">Menu główne</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="./add-expanse.php">Dodaj wydatek</a>
+            <a class="nav-link" href="./add-expanse.php">Dodaj wydatek</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./add-income.php">Dodaj przychód</a>
+            <a class="nav-link active" aria-current="page" href="./add-income.php">Dodaj przychód</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="./balance-page.php">Przeglądaj bilans</a>
@@ -167,32 +166,12 @@ if (isset($_POST['amount'])) {
         <div class="row text-center">
           <div class="col">
             <div>
-              <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="paymentMethod" id="paymentMethod" required>
-                <option value="" disabled selected>Wybierz sposób płatności</option>
-                <option value="Gotówka">Gotówka</option>
-                <option value="Karta debetowa">Karta debetowa</option>
-                <option value="Karta kredytowa">Karta kredytowa</option>
-              </select>
-            </div>
-            <div>
-              <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="expandCategory" id="expandCategory" required>
-                <option value="" disabled selected>Wybierz kategorię wydatku</option>
-                <option value="Jedzenie">Jedzenie</option>
-                <option value="Mieszkanie">Mieszkanie</option>
-                <option value="Transport">Transport</option>
-                <option value="Telekomunikacja">Telekomunikacja</option>
-                <option value="Opieka zdrowotna">Opieka zdrowotna</option>
-                <option value="Ubranie">Ubranie</option>
-                <option value="Higiena">Higiena</option>
-                <option value="Dzieci">Dzieci</option>
-                <option value="Rozrywka">Rozrywka</option>
-                <option value="Wycieczka">Wycieczka</option>
-                <option value="Szkolenia">Szkolenia</option>
-                <option value="Książki">Książki</option>
-                <option value="Na złotą jesień, czyli emeryturę">Na złotą jesień, czyli emeryturę</option>
-                <option value="Spłata długów">Spłata długów</option>
-                <option value="Darowizna">Darowizna</option>
-                <option value="Inne wydatki">Inne wydatki</option>
+              <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="incomeCategory" id="incomeCategory" required>
+                <option value="" disabled selected>Wybierz kategorię przychodu</option>
+                <option value="Wynagrodzenie">Wynagrodzenie</option>
+                <option value="Odsetki_bankowe">Odsetki bankowe</option>
+                <option value="Sprzedaz_na_allegro">Sprzedaz na allegro</option>
+                <option value="Inne">Inne</option>
               </select>
             </div>
           </div>

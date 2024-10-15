@@ -144,6 +144,9 @@ if (isset($_POST['email'])) {
             <a class="nav-link" href="./add-expanse.php">Dodaj wydatek</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="./add-income.php">Dodaj przychód</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="./balance-page.php">Przeglądaj bilans</a>
           </li>
         </ul>

@@ -45,7 +45,7 @@
 </head>
 
 <body>
-  <nav
+<nav
     class="navbar navbar-expand-sm navbar-dark bg-dark"
     aria-label="Third navbar example">
     <div class="container-fluid">
@@ -66,19 +66,21 @@
             <a class="nav-link" href="./index.php">Strona główna</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./sign-up-page.php">Rejestracja</a>
+            <a
+              class="nav-link"
+              href="./sign-up-page.php">Rejestracja</a>
           </li>
           <li class="nav-item">
-            <a
-              class="nav-link active"
-              aria-current="page"
-              href="./log-in-page.php">Logowanie</a>
+            <a class="nav-link" href="./log-in-page.php">Logowanie</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="./menu.php">Menu główne</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="./add-expanse.php">Dodaj wydatek</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./add-income.php">Dodaj przychód</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="./balance-page.php">Przeglądaj bilans</a>

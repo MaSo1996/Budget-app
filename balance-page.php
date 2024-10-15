@@ -24,10 +24,9 @@
     <script src="https://www.google.com/jsapi"></script>
   </head>
   <body>
-    <nav
+  <nav
     class="navbar navbar-expand-sm navbar-dark bg-dark"
-    aria-label="Third navbar example"
-  >
+    aria-label="Third navbar example">
     <div class="container-fluid">
       <button
         class="navbar-toggler collapsed"
@@ -36,8 +35,7 @@
         data-bs-target="#navbarsExample03"
         aria-controls="navbarsExample03"
         aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+        aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -49,9 +47,7 @@
           <li class="nav-item">
             <a
               class="nav-link"
-              href="./sign-up-page.php"
-              >Rejestracja</a
-            >
+              href="./sign-up-page.php">Rejestracja</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="./log-in-page.php">Logowanie</a>
@@ -60,7 +56,10 @@
             <a class="nav-link" href="./menu.php">Menu główne</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./add-expanse.php">Dodaj wydatek</a>
+            <a class="nav-link"  href="./add-expanse.php">Dodaj wydatek</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./add-income.php">Dodaj przychód</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="./balance-page.php">Przeglądaj bilans</a>
