@@ -39,6 +39,7 @@ if (isset($_POST['amount'])) {
       if ($pdo) {
         $query = $pdo->prepare("INSERT INTO expanses VALUES(null,'$loggedUser','$amount','$date','$comment','$paymentMethod','$expandCategory')");
         $query->execute();
+        $pdo = null;
       }
     } catch (PDOException $e) {
       echo $e->getMessage();

@@ -38,6 +38,7 @@ if (isset($_POST['amount'])) {
       if ($pdo) {
         $query = $pdo->prepare("INSERT INTO incomes VALUES(null,'$loggedUser','$amount','$date','$comment','$incomeCategory')");
         $query->execute();
+        $pdo = null;
       }
     } catch (PDOException $e) {
       echo $e->getMessage();
