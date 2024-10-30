@@ -101,7 +101,19 @@ if (!isset($_SESSION['loggedUser'])) {
           $pdo = new PDO($dsn, $user, $password);
 
           if ($pdo) {
-            $query = $pdo->prepare("SELECT incomes.incomeCategory, sum(incomes.amount) FROM incomes WHERE incomes.userId like {$_SESSION['loggedUser']} GROUP by incomes.incomeCategory;");
+
+            $pdo->query("CREATE TABLE IF NOT EXISTS incomes
+            (
+                transactionId int not null AUTO_INCREMENT,
+                userId int(255),
+                amount float,
+                date date,
+                comment varchar(255),
+                incomeCategory varchar(255),
+                PRIMARY KEY (transactionId)
+            )");
+
+            $query = $pdo->prepare("SELECT incomes.incomeCategory, round(sum(incomes.amount),2) FROM incomes WHERE incomes.userId like {$_SESSION['loggedUser']} GROUP by incomes.incomeCategory;");
             $query->execute();
           }
         } catch (PDOException $e) {
@@ -122,7 +134,7 @@ if (!isset($_SESSION['loggedUser'])) {
             ?>
               <tr>
                 <td><?php echo $rows['incomeCategory']; ?></td>
-                <td><?php echo $rows['sum(incomes.amount)']; ?></td>
+                <td><?php echo $rows['round(sum(incomes.amount),2)']; ?></td>
               </tr>
             <?php
             } ?>
@@ -163,6 +175,56 @@ if (!isset($_SESSION['loggedUser'])) {
         </table> -->
       </div>
       <div class="col-sm-6 text-center">
+        <?php
+
+        require 'config.php';
+
+        $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
+
+        try {
+          $pdo = new PDO($dsn, $user, $password);
+
+          if ($pdo) {
+
+            $pdo->query("CREATE TABLE IF NOT EXISTS expanses
+            (
+                transactionId int not null AUTO_INCREMENT,
+                userId int(255),
+                amount float,
+                date date,
+                comment varchar(255),
+                paymentMethod varchar(255),
+                expandCategory varchar(255),
+                PRIMARY KEY (transactionId)
+            )");
+
+            $query = $pdo->prepare("SELECT expanses.expandCategory, round(sum(expanses.amount),2) FROM expanses WHERE expanses.userId like {$_SESSION['loggedUser']} GROUP by expanses.expandCategory;");
+            $query->execute();
+          }
+        } catch (PDOException $e) {
+          echo $e->getMessage();
+        }
+
+        ?>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Kategoria wydatku</th>
+              <th>Suma wydatków</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            while ($rows = $query->fetch()) {
+            ?>
+              <tr>
+                <td><?php echo $rows['expandCategory']; ?></td>
+                <td><?php echo $rows['round(sum(expanses.amount),2)']; ?></td>
+              </tr>
+            <?php
+            } ?>
+          </tbody>
+        </table>
         <!-- <table class="table caption-top expanses">
           <caption>
             Wydatki

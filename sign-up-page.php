@@ -47,10 +47,33 @@ if (isset($_POST['email'])) {
 
   require 'config.php';
 
+  $dsn = "mysql:host=$host;charset=UTF8";
+
+  try {
+    $pdo = new PDO($dsn, $user, $password);
+
+    if ($pdo) {
+      $pdo->query("create database if not exists $db");
+    }
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+  }
+
   $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 
   try {
     $pdo = new PDO($dsn, $user, $password);
+
+    if ($pdo) {
+      $pdo->query("CREATE TABLE IF NOT EXISTS users
+      (
+          userId int not null AUTO_INCREMENT,
+          email varchar(255),
+          name varchar(255),
+          password varchar(255),
+          PRIMARY KEY (userId)
+      )");
+    }
 
     if ($pdo) {
       $whatToLookFor = $pdo->query("SELECT users.email from users where users.email like '$email'");

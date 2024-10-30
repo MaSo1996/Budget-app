@@ -36,6 +36,18 @@ if (isset($_POST['amount'])) {
     try {
       $pdo = new PDO($dsn, $user, $password);
 
+      $pdo->query("CREATE TABLE IF NOT EXISTS expanses
+      (
+          transactionId int not null AUTO_INCREMENT,
+          userId int(255),
+          amount float,
+          date date,
+          comment varchar(255),
+          paymentMethod varchar(255),
+          expandCategory varchar(255),
+          PRIMARY KEY (transactionId)
+      )");
+
       if ($pdo) {
         $query = $pdo->prepare("INSERT INTO expanses VALUES(null,'$loggedUser','$amount','$date','$comment','$paymentMethod','$expandCategory')");
         $query->execute();

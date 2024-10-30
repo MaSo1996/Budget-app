@@ -35,6 +35,17 @@ if (isset($_POST['amount'])) {
     try {
       $pdo = new PDO($dsn, $user, $password);
 
+      $pdo->query("CREATE TABLE IF NOT EXISTS incomes
+      (
+          transactionId int not null AUTO_INCREMENT,
+          userId int(255),
+          amount float,
+          date date,
+          comment varchar(255),
+          incomeCategory varchar(255),
+          PRIMARY KEY (transactionId)
+      )");
+
       if ($pdo) {
         $query = $pdo->prepare("INSERT INTO incomes VALUES(null,'$loggedUser','$amount','$date','$comment','$incomeCategory')");
         $query->execute();
