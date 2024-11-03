@@ -80,12 +80,12 @@ if (!isset($_SESSION['loggedUser'])) {
   <div class="container">
     <div class="col text-end mt-3">
       <div>
-        <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="expandCategory" id="expandCategory" required>
+        <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="timePeriod" id="timePeriod" required>
           <option value="" disabled selected>Wybierz okres czasu</option>
-          <option value="Jedzenie">Bieżący miesiąc</option>
-          <option value="Mieszkanie">Poprzedni miesiąc</option>
-          <option value="Transport">Bieżący rok</option>
-          <option value="Telekomunikacja">Niestandardowy</option>
+          <option value="currentMonth">Bieżący miesiąc</option>
+          <option value="previousMonth">Poprzedni miesiąc</option>
+          <option value="currentYear">Bieżący rok</option>
+          <option value="custom">Niestandardowy</option>
         </select>
       </div>
     </div>
@@ -140,39 +140,6 @@ if (!isset($_SESSION['loggedUser'])) {
             } ?>
           </tbody>
         </table>
-        <!-- <table class="table caption-top expanses">
-          <caption>
-            Przychody
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Kategoria przychodu</th>
-              <th scope="col">Suma z wybranego okresu</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Wynagrodzenie</th>
-              <td>6500.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Odsetki bankowe</th>
-              <td>123.50</td>
-            </tr>
-            <tr>
-              <th scope="row">Sprzedaż na allegro</th>
-              <td>100.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Inne</th>
-              <td>50.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Przychody łącznie</th>
-              <td>6823,50</td>
-            </tr>
-          </tbody>
-        </table> -->
       </div>
       <div class="col-sm-6 text-center">
         <?php
@@ -225,91 +192,6 @@ if (!isset($_SESSION['loggedUser'])) {
             } ?>
           </tbody>
         </table>
-        <!-- <table class="table caption-top expanses">
-          <caption>
-            Wydatki
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Kategoria wydatku</th>
-              <th scope="col">Suma z wybranego okresu</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Jedzenie</th>
-              <td>400.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Mieszkanie</th>
-              <td>1450.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Transport</th>
-              <td>300.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Telekomunikacja</th>
-              <td>100.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Opieka zdrowotna</th>
-              <td>150.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Ubranie</th>
-              <td>150.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Higienia</th>
-              <td>50.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Dzieci</th>
-              <td>0.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Rozrywka</th>
-              <td>150.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Wycieczka</th>
-              <td>70.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Szkolenia</th>
-              <td>1000.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Książki</th>
-              <td>25.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Oszczędności</th>
-              <td>100.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Na złotą jesień, czyli emeryturę</th>
-              <td>100.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Spłata długów</th>
-              <td>0.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Darowizna</th>
-              <td>0.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Inne wydatki</th>
-              <td>150.00</td>
-            </tr>
-            <tr>
-              <th scope="row">Wydatki łącznie</th>
-              <td>4195,00</td>
-            </tr>
-          </tbody>
-        </table> -->
       </div>
     </div>
     <div class="row text-center">
