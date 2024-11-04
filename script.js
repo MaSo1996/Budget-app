@@ -34,3 +34,7 @@ function drawChart() {
 $(window).resize(function(){
   drawChart();
 });
+
+function showAnotherDiv() {
+  if ($('#timePeriod') === "custom");
+}

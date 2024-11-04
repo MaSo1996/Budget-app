@@ -6,6 +6,24 @@ if (!isset($_SESSION['loggedUser'])) {
   header("Location: ./welcome.php");
 }
 
+if (isset($_POST['timePeriod'])) {
+  $timePeriod = $_POST['timePeriod'];
+  $currentDate = getdate();
+  if ($timePeriod === "currentMonth") {
+    $yearToDisplay = $currentDate['year'];
+    $monthToDisplay = $currentDate['mon'];
+  } else if ($timePeriod === 'previousMonth') {
+    $yearToDisplay = $currentDate['year'];
+    if ($currentDate['mon'] === 1) {
+      $monthToDisplay = 12;
+    } else {
+      $monthToDisplay = $currentDate['mon'] - 1;
+    }
+  } else if ($timePeriod === 'currentYear') {
+    $yearToDisplay = $currentDate['year'];
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -80,13 +98,37 @@ if (!isset($_SESSION['loggedUser'])) {
   <div class="container">
     <div class="col text-end mt-3">
       <div>
-        <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="timePeriod" id="timePeriod" required>
-          <option value="" disabled selected>Wybierz okres czasu</option>
-          <option value="currentMonth">Bieżący miesiąc</option>
-          <option value="previousMonth">Poprzedni miesiąc</option>
-          <option value="currentYear">Bieżący rok</option>
-          <option value="custom">Niestandardowy</option>
-        </select>
+        <form method="post">
+          <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="timePeriod" id="timePeriod" onchange="showAnotherDiv()" required>
+            <option value="" disabled selected>Wybierz okres czasu</option>
+            <option value="currentMonth">Bieżący miesiąc</option>
+            <option value="previousMonth">Poprzedni miesiąc</option>
+            <option value="currentYear">Bieżący rok</option>
+            <option value="custom">Niestandardowy</option>
+          </select>
+        </form>
+      </div>
+      <div id="divToDisplay">
+        <div class="col">
+          <div class="row mb-3 justify-content-end text-center">
+            <div class="col-3">
+              <label for="beginOfTimePeriod" class="form-label">Data początkowa</label>
+              <input
+                type="date"
+                class="form-control"
+                id="beginOfTimePeriod"
+                name="beginOfTimePeriod" />
+            </div>
+            <div class="col-3">
+              <label for="endOfTimePeriod" class="form-label">Data końcowa</label>
+              <input
+                type="date"
+                class="form-control"
+                id="endOfTimePeriod"
+                name="endOfTimePeriod" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">
