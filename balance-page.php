@@ -9,17 +9,18 @@ if (!isset($_SESSION['loggedUser'])) {
 if (isset($_POST['timePeriod'])) {
   $timePeriod = $_POST['timePeriod'];
   $currentDate = getdate();
-  if ($timePeriod === "currentMonth") {
+  if ($timePeriod == "currentMonth") {
     $yearToDisplay = $currentDate['year'];
     $monthToDisplay = $currentDate['mon'];
-  } else if ($timePeriod === 'previousMonth') {
-    $yearToDisplay = $currentDate['year'];
-    if ($currentDate['mon'] === 1) {
+  } else if ($timePeriod == 'previousMonth') {
+    if ($currentDate['mon'] == 1) {
       $monthToDisplay = 12;
+      $yearToDisplay = $currentDate['year'] - 1;
     } else {
       $monthToDisplay = $currentDate['mon'] - 1;
+      $yearToDisplay = $currentDate['year'];
     }
-  } else if ($timePeriod === 'currentYear') {
+  } else if ($timePeriod == 'currentYear') {
     $yearToDisplay = $currentDate['year'];
   }
 }
@@ -108,7 +109,7 @@ if (isset($_POST['timePeriod'])) {
           </select>
         </form>
       </div>
-      <div id="divToDisplay">
+      <div id="divToDisplay" hidden>
         <div class="col">
           <div class="row mb-3 justify-content-end text-center">
             <div class="col-3">
