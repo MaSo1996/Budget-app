@@ -22,6 +22,17 @@ if (isset($_POST['timePeriod'])) {
     }
   } else if ($timePeriod == 'currentYear') {
     $yearToDisplay = $currentDate['year'];
+  } else if ($timePeriod == 'custom') {
+    $beginOfTimePeriod = $_POST['beginOfTimePeriod'];
+    $endOfTimePeriod = $_POST['endOfTimePeriod'];
+  }
+
+  $_SESSION['frTimePeriod'] = $timePeriod;
+  if (isset($beginOfTimePeriod)) {
+    $_SESSION['frBeginOfTimePeriod'] = $beginOfTimePeriod;
+  }
+  if (isset($endOfTimePeriod)) {
+    $_SESSION['frEndOfTimePeriod'] = $endOfTimePeriod;
   }
 }
 
@@ -98,8 +109,8 @@ if (isset($_POST['timePeriod'])) {
   </nav>
   <div class="container">
     <div class="col text-end mt-3">
-      <div>
-        <form method="post">
+      <form method="post" onsubmit="showAnotherDiv()">
+        <div>
           <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="timePeriod" id="timePeriod" onchange="showAnotherDiv()" required>
             <option value="" disabled selected>Wybierz okres czasu</option>
             <option value="currentMonth">Bieżący miesiąc</option>
@@ -107,30 +118,47 @@ if (isset($_POST['timePeriod'])) {
             <option value="currentYear">Bieżący rok</option>
             <option value="custom">Niestandardowy</option>
           </select>
-        </form>
-      </div>
-      <div id="divToDisplay" hidden>
-        <div class="col">
-          <div class="row mb-3 justify-content-end text-center">
-            <div class="col-3">
-              <label for="beginOfTimePeriod" class="form-label">Data początkowa</label>
-              <input
-                type="date"
-                class="form-control"
-                id="beginOfTimePeriod"
-                name="beginOfTimePeriod" />
-            </div>
-            <div class="col-3">
-              <label for="endOfTimePeriod" class="form-label">Data końcowa</label>
-              <input
-                type="date"
-                class="form-control"
-                id="endOfTimePeriod"
-                name="endOfTimePeriod" />
+        </div>
+        <div id="divToDisplay" hidden>
+          <div class="col">
+            <div class="row mb-3 justify-content-end text-center">
+              <div class="col-3">
+                <label for="beginOfTimePeriod" class="form-label">Data początkowa</label>
+                <input
+                  value="
+                <?php
+                if (isset($_SESSION['frBeginOfTimePeriod'])) {
+                  echo ($_SESSION['frBeginOfTimePeriod']);
+                  unset($_SESSION['frBeginOfTimePeriod']);
+                }
+                ?>"
+                  type="date"
+                  class="form-control"
+                  id="beginOfTimePeriod"
+                  name="beginOfTimePeriod" />
+              </div>
+              <div class="col-3">
+                <label for="endOfTimePeriod" class="form-label">Data końcowa</label>
+                <input
+                  value="
+                <?php
+                if (isset($_SESSION['frEndOfTimePeriod'])) {
+                  echo ($_SESSION['frEndOfTimePeriod']);
+                  unset($_SESSION['frEndOfTimePeriod']);
+                }
+                ?>"
+                  type="date"
+                  class="form-control"
+                  id="endOfTimePeriod"
+                  name="endOfTimePeriod" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        <div>
+          <input type="submit" class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" value="Wyświetl bilans">
+        </div>
+      </form>
     </div>
     <div class="row">
       <div class="col-sm-6 text-center">

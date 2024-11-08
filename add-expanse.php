@@ -52,6 +52,10 @@ if (isset($_POST['amount'])) {
         $query = $pdo->prepare("INSERT INTO expanses VALUES(null,'$loggedUser','$amount','$date','$comment','$paymentMethod','$expandCategory')");
         $query->execute();
         $pdo = null;
+        echo "<script>
+        alert('Wydatek został dodany');
+        window.location.href='./menu.php';
+        </script>";
       }
     } catch (PDOException $e) {
       echo $e->getMessage();

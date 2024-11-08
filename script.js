@@ -46,3 +46,7 @@ function showAnotherDiv() {
     divToDisplay.hidden  = true;
   }
 }
+
+function selectPreviousValue(frTimePeriod) {
+  document.getElementById("timePeriod").value = frTimePeriod;
+}

@@ -27,7 +27,10 @@ if (isset($_POST['nick'])) {
         if (password_verify($accountPassword, $fetch['password'])) {
           $_SESSION['loggedUser'] = $fetch['userId'];
           $pdo = null;
-          header('Location: menu.php');
+          echo "<script>
+          alert('Udało Ci się zalogować!');
+          window.location.href='./menu.php';
+          </script>";
         }
       } else {
         $_SESSION['error'] = 'Nieprawidłowy login lub hasło.';
@@ -59,7 +62,7 @@ if (isset($_POST['nick'])) {
 </head>
 
 <body>
-<nav
+  <nav
     class="navbar navbar-expand-sm navbar-dark bg-dark"
     aria-label="Third navbar example">
     <div class="container-fluid">
@@ -122,15 +125,14 @@ if (isset($_POST['nick'])) {
               class="form-control"
               id="exampleInputPassword1"
               name="accountPassword" />
-              <div class="error">
-                <?php
-                if(isset($_SESSION['error']))
-                {
-                  echo $_SESSION['error'];
-                  unset($_SESSION['error']);
-                }
-                ?>
-              </div>
+            <div class="error">
+              <?php
+              if (isset($_SESSION['error'])) {
+                echo $_SESSION['error'];
+                unset($_SESSION['error']);
+              }
+              ?>
+            </div>
           </div>
           <input type="submit" class="btn btn-primary" value="Zaloguj się">
           <div class="information">

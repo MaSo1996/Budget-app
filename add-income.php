@@ -50,6 +50,9 @@ if (isset($_POST['amount'])) {
         $query = $pdo->prepare("INSERT INTO incomes VALUES(null,'$loggedUser','$amount','$date','$comment','$incomeCategory')");
         $query->execute();
         $pdo = null;
+        echo "<script>
+        alert('Przychód został dodany');
+        </script>";
       }
     } catch (PDOException $e) {
       echo $e->getMessage();
