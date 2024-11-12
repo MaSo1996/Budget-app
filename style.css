@@ -42,6 +42,10 @@ table {
   color: green;
 }
 
+.negative-message {
+  color: red;
+}
+
 .error {
   color: red;
 }

@@ -164,7 +164,7 @@ if (isset($_POST['timePeriod'])) {
       <div class="col-sm-6 text-center">
         <?php
 
-        require 'config.php';
+        require_once 'config.php';
 
         $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 
@@ -215,7 +215,7 @@ if (isset($_POST['timePeriod'])) {
       <div class="col-sm-6 text-center">
         <?php
 
-        require 'config.php';
+        require_once 'config.php';
 
         $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 
@@ -265,10 +265,50 @@ if (isset($_POST['timePeriod'])) {
         </table>
       </div>
     </div>
+    <?php
+
+    require_once 'config.php';
+
+    $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
+
+    try {
+      $pdo = new PDO($dsn, $user, $password);
+
+      if ($pdo) {
+        $query = $pdo->prepare("SELECT incomes.userId, round(sum(incomes.amount),2) FROM incomes WHERE incomes.userId like {$_SESSION['loggedUser']} GROUP by incomes.userId");
+        $query->execute();
+        $rows = $query->fetch();
+        $sumOfIncomes = $rows[1];
+
+        $query = $pdo->prepare("SELECT expanses.userId, round(sum(expanses.amount),2) FROM expanses WHERE expanses.userId like {$_SESSION['loggedUser']} GROUP by expanses.userId");
+        $query->execute();
+        $rows = $query->fetch();
+        $sumOfExpanses = $rows[1];
+
+        $balance = $sumOfIncomes - $sumOfExpanses;
+      }
+    } catch (PDOException $e) {
+      echo $e->getMessage();
+    }
+
+    ?>
     <div class="row text-center">
       <p>Bilans z wybranego okresu: </p>
-      <p class="difference">2628,5</p>
-      <p class="positive-message">Gratulacje! Świetnie zarządzasz swoim budżetem!</p>
+      <p class="difference">
+        <?php
+        echo $balance;
+        ?>
+      </p>
+      <?php
+if ($balance >= 0)
+{ ?>
+  <p class="positive-message">Gratulacje! Świetnie zarządzasz swoim budżetem!</p>
+<?php }
+else
+{ ?>
+  <p class="negative-message">Uważaj! Twoje wydatki są większe niż wpływy!</p>'
+<?php }
+      ?>
     </div>
     <div class="row">
       <div class="col">
