@@ -9,22 +9,55 @@ if (!isset($_SESSION['loggedUser'])) {
 if (isset($_POST['timePeriod'])) {
   $timePeriod = $_POST['timePeriod'];
   $currentDate = getdate();
+
   if ($timePeriod == "currentMonth") {
-    $yearToDisplay = $currentDate['year'];
-    $monthToDisplay = $currentDate['mon'];
+    $beginDateYear = $currentDate['year'];
+    $beginDateMonth = $currentDate['mon'];
+
+    if ($beginDateMonth == 12) {
+      $endDateYear = $beginDateYear + 1;
+      $endDateMonth = 1;
+    } else {
+      $endDateYear = $beginDateYear;
+      $endDateMonth = $beginDateMonth + 1;
+    }
+
+    $beginOfTimePeriod = $beginDateYear . "-" . $beginDateMonth . "-" . "01";
+    $endOfTimePeriod = $endDateYear . "-" . $endDateMonth . "-" . "01";
+
+    $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
+    $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
   } else if ($timePeriod == 'previousMonth') {
     if ($currentDate['mon'] == 1) {
-      $monthToDisplay = 12;
-      $yearToDisplay = $currentDate['year'] - 1;
+      $beginDateMonth = 12;
+      $beginDateYear = $currentDate['year'] - 1;
     } else {
-      $monthToDisplay = $currentDate['mon'] - 1;
-      $yearToDisplay = $currentDate['year'];
+      $beginDateMonth = $currentDate['mon'] - 1;
+      $beginDateYear = $currentDate['year'];
     }
+
+    $endDateMonth = $currentDate['mon'];
+    $endDateYear = $currentDate['year'];
+
+    $beginOfTimePeriod = $beginDateYear . "-" . $beginDateMonth . "-" . "01";
+    $endOfTimePeriod = $endDateYear . "-" . $endDateMonth . "-" . "01";
+
+    $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
+    $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
   } else if ($timePeriod == 'currentYear') {
-    $yearToDisplay = $currentDate['year'];
+    $endDateYear = $currentDate['year'] + 1;
+
+    $beginOfTimePeriod = $currentDate['year'] . "-" . "01" . "-" . "01";
+    $endOfTimePeriod = $endDateYear . "-" . "01" . "-" . "01";
+
+    $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
+    $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
   } else if ($timePeriod == 'custom') {
     $beginOfTimePeriod = $_POST['beginOfTimePeriod'];
     $endOfTimePeriod = $_POST['endOfTimePeriod'];
+
+    $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
+    $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
   }
 
   $_SESSION['frTimePeriod'] = $timePeriod;
@@ -300,14 +333,11 @@ if (isset($_POST['timePeriod'])) {
         ?>
       </p>
       <?php
-if ($balance >= 0)
-{ ?>
-  <p class="positive-message">Gratulacje! Świetnie zarządzasz swoim budżetem!</p>
-<?php }
-else
-{ ?>
-  <p class="negative-message">Uważaj! Twoje wydatki są większe niż wpływy!</p>'
-<?php }
+      if ($balance >= 0) { ?>
+        <p class="positive-message">Gratulacje! Świetnie zarządzasz swoim budżetem!</p>
+      <?php } else { ?>
+        <p class="negative-message">Uważaj! Twoje wydatki są większe niż wpływy!</p>'
+      <?php }
       ?>
     </div>
     <div class="row">
