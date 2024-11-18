@@ -50,3 +50,20 @@ function showAnotherDiv() {
 function selectPreviousValue(frTimePeriod) {
   document.getElementById("timePeriod").value = frTimePeriod;
 }
+
+document.getElementById("showBalanceForm").onsubmit = function() {showHiddenTables()};
+
+function showHiddenTables() {
+  var tablesToDisplay = document.getElementsByClassName("table");
+  for(i = 0; i < tablesToDisplay.length; i++)
+  {
+    if(tablesToDisplay[i].hidden == true)
+    {
+      tablesToDisplay[i].hidden = false;
+    }
+    else
+    {
+      tablesToDisplay[i].hidden = true;
+    }
+  }
+}

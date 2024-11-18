@@ -24,9 +24,6 @@ if (isset($_POST['timePeriod'])) {
 
     $beginOfTimePeriod = $beginDateYear . "-" . $beginDateMonth . "-" . "01";
     $endOfTimePeriod = $endDateYear . "-" . $endDateMonth . "-" . "01";
-
-    $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
-    $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
   } else if ($timePeriod == 'previousMonth') {
     if ($currentDate['mon'] == 1) {
       $beginDateMonth = 12;
@@ -41,31 +38,25 @@ if (isset($_POST['timePeriod'])) {
 
     $beginOfTimePeriod = $beginDateYear . "-" . $beginDateMonth . "-" . "01";
     $endOfTimePeriod = $endDateYear . "-" . $endDateMonth . "-" . "01";
-
-    $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
-    $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
   } else if ($timePeriod == 'currentYear') {
     $endDateYear = $currentDate['year'] + 1;
 
     $beginOfTimePeriod = $currentDate['year'] . "-" . "01" . "-" . "01";
     $endOfTimePeriod = $endDateYear . "-" . "01" . "-" . "01";
-
-    $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
-    $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
   } else if ($timePeriod == 'custom') {
     $beginOfTimePeriod = $_POST['beginOfTimePeriod'];
     $endOfTimePeriod = $_POST['endOfTimePeriod'];
-
-    $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
-    $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
   }
+
+  $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
+  $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
 
   $_SESSION['frTimePeriod'] = $timePeriod;
-  if (isset($beginOfTimePeriod)) {
-    $_SESSION['frBeginOfTimePeriod'] = $beginOfTimePeriod;
+  if (isset($beginOfTimePeriodAsTimestamp)) {
+    $_SESSION['frBeginOfTimePeriod'] = $beginOfTimePeriodAsTimestamp;
   }
-  if (isset($endOfTimePeriod)) {
-    $_SESSION['frEndOfTimePeriod'] = $endOfTimePeriod;
+  if (isset($endOfTimePeriodAsTimestamp)) {
+    $_SESSION['frEndOfTimePeriod'] = $endOfTimePeriodAsTimestamp;
   }
 }
 
@@ -95,7 +86,7 @@ if (isset($_POST['timePeriod'])) {
   <script src="https://www.google.com/jsapi"></script>
 </head>
 
-<body>
+<body id="bodyOfBalancePage">
   <nav
     class="navbar navbar-expand-sm navbar-dark bg-dark"
     aria-label="Third navbar example">
@@ -142,9 +133,9 @@ if (isset($_POST['timePeriod'])) {
   </nav>
   <div class="container">
     <div class="col text-end mt-3">
-      <form method="post" onsubmit="showAnotherDiv()">
+      <form method="post" id="showBalanceForm">
         <div>
-          <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="timePeriod" id="timePeriod" onchange="showAnotherDiv()" required>
+          <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="timePeriod" id="timePeriod" required>
             <option value="" disabled selected>Wybierz okres czasu</option>
             <option value="currentMonth">Bieżący miesiąc</option>
             <option value="previousMonth">Poprzedni miesiąc</option>
@@ -152,7 +143,7 @@ if (isset($_POST['timePeriod'])) {
             <option value="custom">Niestandardowy</option>
           </select>
         </div>
-        <div id="divToDisplay" hidden>
+        <div id="divToDisplay">
           <div class="col">
             <div class="row mb-3 justify-content-end text-center">
               <div class="col-3">
@@ -161,7 +152,7 @@ if (isset($_POST['timePeriod'])) {
                   value="
                 <?php
                 if (isset($_SESSION['frBeginOfTimePeriod'])) {
-                  echo ($_SESSION['frBeginOfTimePeriod']);
+                  echo date('Y-m-d', $_SESSION['frBeginOfTimePeriod']);
                   unset($_SESSION['frBeginOfTimePeriod']);
                 }
                 ?>"
@@ -176,7 +167,7 @@ if (isset($_POST['timePeriod'])) {
                   value="
                 <?php
                 if (isset($_SESSION['frEndOfTimePeriod'])) {
-                  echo ($_SESSION['frEndOfTimePeriod']);
+                  echo date('Y-m-d', $_SESSION['frEndOfTimePeriod']);
                   unset($_SESSION['frEndOfTimePeriod']);
                 }
                 ?>"
@@ -311,12 +302,20 @@ if (isset($_POST['timePeriod'])) {
         $query = $pdo->prepare("SELECT incomes.userId, round(sum(incomes.amount),2) FROM incomes WHERE incomes.userId like {$_SESSION['loggedUser']} GROUP by incomes.userId");
         $query->execute();
         $rows = $query->fetch();
-        $sumOfIncomes = $rows[1];
+        if (count($rows) != 0) {
+          $sumOfIncomes = $rows[1];
+        } else {
+          $sumOfIncomes = 0;
+        }
 
         $query = $pdo->prepare("SELECT expanses.userId, round(sum(expanses.amount),2) FROM expanses WHERE expanses.userId like {$_SESSION['loggedUser']} GROUP by expanses.userId");
         $query->execute();
         $rows = $query->fetch();
-        $sumOfExpanses = $rows[1];
+        if (count($rows) != 0) {
+          $sumOfExpanses = $rows[1];
+        } else {
+          $sumOfExpanses = 0;
+        }
 
         $balance = $sumOfIncomes - $sumOfExpanses;
       }
