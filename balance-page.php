@@ -6,6 +6,8 @@ if (!isset($_SESSION['loggedUser'])) {
   header("Location: ./welcome.php");
 }
 
+$validationSuccess = false;
+
 if (isset($_POST['timePeriod'])) {
   $timePeriod = $_POST['timePeriod'];
   $currentDate = getdate();
@@ -48,6 +50,18 @@ if (isset($_POST['timePeriod'])) {
     $endOfTimePeriod = $_POST['endOfTimePeriod'];
   }
 
+  $validationSuccess = true;
+
+  if (empty($beginOfTimePeriod)) {
+    $_SESSION['eBeginOfTimePeriod'] = "Podaj poprawną datę";
+    $validationSuccess = false;
+  }
+
+  if (empty($endOfTimePeriod)) {
+    $_SESSION['eEndOfTimePeriod'] = "Podaj poprawną datę";
+    $validationSuccess = false;
+  }
+
   $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
   $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
 
@@ -86,7 +100,7 @@ if (isset($_POST['timePeriod'])) {
   <script src="https://www.google.com/jsapi"></script>
 </head>
 
-<body id="bodyOfBalancePage">
+<body>
   <nav
     class="navbar navbar-expand-sm navbar-dark bg-dark"
     aria-label="Third navbar example">
@@ -133,7 +147,7 @@ if (isset($_POST['timePeriod'])) {
   </nav>
   <div class="container">
     <div class="col text-end mt-3">
-      <form method="post" id="showBalanceForm">
+      <form method="post">
         <div>
           <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="timePeriod" id="timePeriod" required>
             <option value="" disabled selected>Wybierz okres czasu</option>
@@ -149,32 +163,34 @@ if (isset($_POST['timePeriod'])) {
               <div class="col-3">
                 <label for="beginOfTimePeriod" class="form-label">Data początkowa</label>
                 <input
-                  value="
-                <?php
-                if (isset($_SESSION['frBeginOfTimePeriod'])) {
-                  echo date('Y-m-d', $_SESSION['frBeginOfTimePeriod']);
-                  unset($_SESSION['frBeginOfTimePeriod']);
-                }
-                ?>"
                   type="date"
                   class="form-control"
                   id="beginOfTimePeriod"
                   name="beginOfTimePeriod" />
+                <p class="error">
+                  <?php
+                  if (isset($_SESSION['eBeginOfTimePeriod'])) {
+                    echo ($_SESSION['eBeginOfTimePeriod']);
+                    unset($_SESSION['eBeginOfTimePeriod']);
+                  }
+                  ?>
+                </p>
               </div>
               <div class="col-3">
                 <label for="endOfTimePeriod" class="form-label">Data końcowa</label>
                 <input
-                  value="
-                <?php
-                if (isset($_SESSION['frEndOfTimePeriod'])) {
-                  echo date('Y-m-d', $_SESSION['frEndOfTimePeriod']);
-                  unset($_SESSION['frEndOfTimePeriod']);
-                }
-                ?>"
                   type="date"
                   class="form-control"
                   id="endOfTimePeriod"
                   name="endOfTimePeriod" />
+                <p class="error">
+                  <?php
+                  if (isset($_SESSION['eEndOfTimePeriod'])) {
+                    echo ($_SESSION['eEndOfTimePeriod']);
+                    unset($_SESSION['eEndOfTimePeriod']);
+                  }
+                  ?>
+                </p>
               </div>
             </div>
           </div>
@@ -187,17 +203,17 @@ if (isset($_POST['timePeriod'])) {
     <div class="row">
       <div class="col-sm-6 text-center">
         <?php
+        if ($validationSuccess) {
+          require_once 'config.php';
 
-        require_once 'config.php';
+          $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 
-        $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
+          try {
+            $pdo = new PDO($dsn, $user, $password);
 
-        try {
-          $pdo = new PDO($dsn, $user, $password);
+            if ($pdo) {
 
-          if ($pdo) {
-
-            $pdo->query("CREATE TABLE IF NOT EXISTS incomes
+              $pdo->query("CREATE TABLE IF NOT EXISTS incomes
             (
                 transactionId int not null AUTO_INCREMENT,
                 userId int(255),
@@ -208,47 +224,47 @@ if (isset($_POST['timePeriod'])) {
                 PRIMARY KEY (transactionId)
             )");
 
-            $query = $pdo->prepare("SELECT incomes.incomeCategory, round(sum(incomes.amount),2) FROM incomes WHERE incomes.userId like {$_SESSION['loggedUser']} GROUP by incomes.incomeCategory;");
-            $query->execute();
+              $query = $pdo->prepare("SELECT incomes.incomeCategory, round(sum(incomes.amount),2) FROM incomes WHERE incomes.userId = ? and incomes.date >= ? and incomes.date < ? GROUP by incomes.incomeCategory;");
+              $query->execute([$_SESSION['loggedUser'],$beginOfTimePeriod,$endOfTimePeriod]);
+            }
+          } catch (PDOException $e) {
+            echo $e->getMessage();
           }
-        } catch (PDOException $e) {
-          echo $e->getMessage();
-        }
 
         ?>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Kategoria przychodu</th>
-              <th>Suma przychodów</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php
-            while ($rows = $query->fetch()) {
-            ?>
+          <table class="table">
+            <thead>
               <tr>
-                <td><?php echo $rows['incomeCategory']; ?></td>
-                <td><?php echo $rows['round(sum(incomes.amount),2)']; ?></td>
+                <th>Kategoria przychodu</th>
+                <th>Suma przychodów</th>
               </tr>
-            <?php
-            } ?>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <?php
+              while ($rows = $query->fetch()) {
+              ?>
+                <tr>
+                  <td><?php echo $rows['incomeCategory']; ?></td>
+                  <td><?php echo $rows['round(sum(incomes.amount),2)']; ?></td>
+                </tr>
+              <?php
+              } ?>
+            </tbody>
+          </table>
       </div>
       <div class="col-sm-6 text-center">
         <?php
 
-        require_once 'config.php';
+          require_once 'config.php';
 
-        $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
+          $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 
-        try {
-          $pdo = new PDO($dsn, $user, $password);
+          try {
+            $pdo = new PDO($dsn, $user, $password);
 
-          if ($pdo) {
+            if ($pdo) {
 
-            $pdo->query("CREATE TABLE IF NOT EXISTS expanses
+              $pdo->query("CREATE TABLE IF NOT EXISTS expanses
             (
                 transactionId int not null AUTO_INCREMENT,
                 userId int(255),
@@ -260,12 +276,12 @@ if (isset($_POST['timePeriod'])) {
                 PRIMARY KEY (transactionId)
             )");
 
-            $query = $pdo->prepare("SELECT expanses.expandCategory, round(sum(expanses.amount),2) FROM expanses WHERE expanses.userId like {$_SESSION['loggedUser']} GROUP by expanses.expandCategory;");
-            $query->execute();
+              $query = $pdo->prepare("SELECT expanses.expandCategory, round(sum(expanses.amount),2) FROM expanses WHERE expanses.userId = ? and expanses.date >= ? and expanses.date < ? GROUP by expanses.expandCategory;");
+              $query->execute([$_SESSION['loggedUser'],$beginOfTimePeriod,$endOfTimePeriod]);
+            }
+          } catch (PDOException $e) {
+            echo $e->getMessage();
           }
-        } catch (PDOException $e) {
-          echo $e->getMessage();
-        }
 
         ?>
         <table class="table">
@@ -291,53 +307,54 @@ if (isset($_POST['timePeriod'])) {
     </div>
     <?php
 
-    require_once 'config.php';
+          require_once 'config.php';
 
-    $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
+          $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 
-    try {
-      $pdo = new PDO($dsn, $user, $password);
+          try {
+            $pdo = new PDO($dsn, $user, $password);
 
-      if ($pdo) {
-        $query = $pdo->prepare("SELECT incomes.userId, round(sum(incomes.amount),2) FROM incomes WHERE incomes.userId like {$_SESSION['loggedUser']} GROUP by incomes.userId");
-        $query->execute();
-        $rows = $query->fetch();
-        if (count($rows) != 0) {
-          $sumOfIncomes = $rows[1];
-        } else {
-          $sumOfIncomes = 0;
-        }
+            if ($pdo) {
+              $query = $pdo->prepare("SELECT incomes.userId, round(sum(incomes.amount),2) FROM incomes WHERE incomes.userId = ? and incomes.date >= ? and incomes.date < ? GROUP by incomes.userId");
+              $query->execute([$_SESSION['loggedUser'],$beginOfTimePeriod,$endOfTimePeriod]);
+              $rows = $query->fetch();
+              if ($rows) {
+                $sumOfIncomes = $rows[1];
+              } else {
+                $sumOfIncomes = 0;
+              }
 
-        $query = $pdo->prepare("SELECT expanses.userId, round(sum(expanses.amount),2) FROM expanses WHERE expanses.userId like {$_SESSION['loggedUser']} GROUP by expanses.userId");
-        $query->execute();
-        $rows = $query->fetch();
-        if (count($rows) != 0) {
-          $sumOfExpanses = $rows[1];
-        } else {
-          $sumOfExpanses = 0;
-        }
+              $query = $pdo->prepare("SELECT expanses.userId, round(sum(expanses.amount),2) FROM expanses WHERE expanses.userId = ? and expanses.date >= ? and expanses.date < ? GROUP by expanses.userId");
+              $query->execute([$_SESSION['loggedUser'],$beginOfTimePeriod,$endOfTimePeriod]);
+              $rows = $query->fetch();
+              if ($rows) {
+                $sumOfExpanses = $rows[1];
+              } else {
+                $sumOfExpanses = 0;
+              }
 
-        $balance = $sumOfIncomes - $sumOfExpanses;
-      }
-    } catch (PDOException $e) {
-      echo $e->getMessage();
-    }
+              $balance = $sumOfIncomes - $sumOfExpanses;
+            }
+          } catch (PDOException $e) {
+            echo $e->getMessage();
+          }
 
     ?>
     <div class="row text-center">
       <p>Bilans z wybranego okresu: </p>
       <p class="difference">
         <?php
-        echo $balance;
+          echo $balance;
         ?>
       </p>
       <?php
-      if ($balance >= 0) { ?>
+          if ($balance >= 0) { ?>
         <p class="positive-message">Gratulacje! Świetnie zarządzasz swoim budżetem!</p>
       <?php } else { ?>
         <p class="negative-message">Uważaj! Twoje wydatki są większe niż wpływy!</p>'
-      <?php }
-      ?>
+    <?php }
+        }
+    ?>
     </div>
     <div class="row">
       <div class="col">
