@@ -89,6 +89,7 @@ if (isset($_POST['timePeriod'])) {
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
     crossorigin="anonymous" />
   <link rel="stylesheet" href="./style.css" />
+  <script type="text/javascript" src="./canvasjs/canvasjs-chart-3.10.16/canvasjs.min.js"></script>
 </head>
 
 <body>
@@ -216,7 +217,15 @@ if (isset($_POST['timePeriod'])) {
             )");
 
               $query = $pdo->prepare("SELECT incomes.incomeCategory, round(sum(incomes.amount),2) FROM incomes WHERE incomes.userId = ? and incomes.date >= ? and incomes.date < ? GROUP by incomes.incomeCategory;");
-              $query->execute([$_SESSION['loggedUser'],$beginOfTimePeriod,$endOfTimePeriod]);
+              $query->execute([$_SESSION['loggedUser'], $beginOfTimePeriod, $endOfTimePeriod]);
+
+              $arrayWithIncomes = array();
+
+              $result = $query->fetchAll();
+
+              foreach ($result as $row) {
+                array_push($arrayWithIncomes, array("Income Category" => $row['incomeCategory'], "Amount" => $row['round(sum(incomes.amount),2)']));
+              }
             }
           } catch (PDOException $e) {
             echo $e->getMessage();
@@ -232,11 +241,11 @@ if (isset($_POST['timePeriod'])) {
             </thead>
             <tbody>
               <?php
-              while ($rows = $query->fetch()) {
+              foreach ($result as $row) {
               ?>
                 <tr>
-                  <td><?php echo $rows['incomeCategory']; ?></td>
-                  <td><?php echo $rows['round(sum(incomes.amount),2)']; ?></td>
+                  <td><?php echo $row['incomeCategory']; ?></td>
+                  <td><?php echo $row['round(sum(incomes.amount),2)']; ?></td>
                 </tr>
               <?php
               } ?>
@@ -268,7 +277,15 @@ if (isset($_POST['timePeriod'])) {
             )");
 
               $query = $pdo->prepare("SELECT expanses.expandCategory, round(sum(expanses.amount),2) FROM expanses WHERE expanses.userId = ? and expanses.date >= ? and expanses.date < ? GROUP by expanses.expandCategory;");
-              $query->execute([$_SESSION['loggedUser'],$beginOfTimePeriod,$endOfTimePeriod]);
+              $query->execute([$_SESSION['loggedUser'], $beginOfTimePeriod, $endOfTimePeriod]);
+
+              $arrayWithExpanses = array();
+
+              $result = $query->fetchAll();
+
+              foreach ($result as $row) {
+                array_push($arrayWithExpanses, array("Expanse Category" => $row['expandCategory'], "Amount" => $row['round(sum(expanses.amount),2)']));
+              }
             }
           } catch (PDOException $e) {
             echo $e->getMessage();
@@ -284,11 +301,11 @@ if (isset($_POST['timePeriod'])) {
           </thead>
           <tbody>
             <?php
-            while ($rows = $query->fetch()) {
+            foreach ($result as $row) {
             ?>
               <tr>
-                <td><?php echo $rows['expandCategory']; ?></td>
-                <td><?php echo $rows['round(sum(expanses.amount),2)']; ?></td>
+                <td><?php echo $row['expandCategory']; ?></td>
+                <td><?php echo $row['round(sum(expanses.amount),2)']; ?></td>
               </tr>
             <?php
             } ?>
@@ -307,7 +324,7 @@ if (isset($_POST['timePeriod'])) {
 
             if ($pdo) {
               $query = $pdo->prepare("SELECT incomes.userId, round(sum(incomes.amount),2) FROM incomes WHERE incomes.userId = ? and incomes.date >= ? and incomes.date < ? GROUP by incomes.userId");
-              $query->execute([$_SESSION['loggedUser'],$beginOfTimePeriod,$endOfTimePeriod]);
+              $query->execute([$_SESSION['loggedUser'], $beginOfTimePeriod, $endOfTimePeriod]);
               $rows = $query->fetch();
               if ($rows) {
                 $sumOfIncomes = $rows[1];
@@ -316,7 +333,7 @@ if (isset($_POST['timePeriod'])) {
               }
 
               $query = $pdo->prepare("SELECT expanses.userId, round(sum(expanses.amount),2) FROM expanses WHERE expanses.userId = ? and expanses.date >= ? and expanses.date < ? GROUP by expanses.userId");
-              $query->execute([$_SESSION['loggedUser'],$beginOfTimePeriod,$endOfTimePeriod]);
+              $query->execute([$_SESSION['loggedUser'], $beginOfTimePeriod, $endOfTimePeriod]);
               $rows = $query->fetch();
               if ($rows) {
                 $sumOfExpanses = $rows[1];
@@ -349,11 +366,31 @@ if (isset($_POST['timePeriod'])) {
     </div>
     <div class="row">
       <div class="col">
-        <div id="piechart_3d" style="width: 100%; min-height: 450px"></div>
+        <div id="chartWithIncomes" style="width: 100%; min-height: 450px"></div>
       </div>
     </div>
   </div>
   <script src="./script.js"></script>
+
+  <script>
+    window.onload = function() {
+
+      var chart = new CanvasJS.Chart("chartWithIncomes", {
+        animationEnabled: true,
+        exportEnabled: true,
+        theme: "light1", // "light1", "light2", "dark1", "dark2"
+        title: {
+          text: "Przychody w podziale na kategorie dla danego okresu"
+        },
+        data: [{
+          type: "pie", //change type to bar, line, area, pie, etc  
+          dataPoints: <?php echo json_encode($arrayWithIncomes, JSON_NUMERIC_CHECK); ?>
+        }]
+      });
+      chart.render();
+
+    }
+  </script>
 </body>
 
 </html>
