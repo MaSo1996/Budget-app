@@ -220,11 +220,13 @@ if (isset($_POST['timePeriod'])) {
               $query->execute([$_SESSION['loggedUser'], $beginOfTimePeriod, $endOfTimePeriod]);
 
               $arrayWithIncomes = array();
+              $dataPointsWithIncomes = array();
 
               $result = $query->fetchAll();
 
               foreach ($result as $row) {
                 array_push($arrayWithIncomes, array("Income Category" => $row['incomeCategory'], "Amount" => $row['round(sum(incomes.amount),2)']));
+                array_push($dataPointsWithIncomes, array("x" => $row['incomeCategory'], "y" => $row['round(sum(incomes.amount),2)']));
               }
             }
           } catch (PDOException $e) {
@@ -280,11 +282,13 @@ if (isset($_POST['timePeriod'])) {
               $query->execute([$_SESSION['loggedUser'], $beginOfTimePeriod, $endOfTimePeriod]);
 
               $arrayWithExpanses = array();
+              $dataPointsWithExpanses = array();
 
               $result = $query->fetchAll();
 
               foreach ($result as $row) {
                 array_push($arrayWithExpanses, array("Expanse Category" => $row['expandCategory'], "Amount" => $row['round(sum(expanses.amount),2)']));
+                array_push($dataPointsWithExpanses,array("x" => $row['expandCategory'], "y" => $row['round(sum(expanses.amount),2)']));
               }
             }
           } catch (PDOException $e) {
@@ -365,8 +369,11 @@ if (isset($_POST['timePeriod'])) {
     ?>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col-sm-6">
         <div id="chartWithIncomes" style="width: 100%; min-height: 450px"></div>
+      </div>
+      <div class="col-sm-6">
+        <div id="chartWithExpanses" style="width: 100%; min-height: 450px"></div>
       </div>
     </div>
   </div>
@@ -375,16 +382,47 @@ if (isset($_POST['timePeriod'])) {
   <script>
     window.onload = function() {
 
-      var chart = new CanvasJS.Chart("chartWithIncomes", {
+
+      var chart = new CanvasJS.Chart("chartWithExpanses", {
+        theme: "light2",
         animationEnabled: true,
-        exportEnabled: true,
-        theme: "light1", // "light1", "light2", "dark1", "dark2"
         title: {
-          text: "Przychody w podziale na kategorie dla danego okresu"
+          text: "Wydatki w podziale na kategorie dla wybranego okresu"
         },
         data: [{
-          type: "pie", //change type to bar, line, area, pie, etc  
-          dataPoints: <?php echo json_encode($arrayWithIncomes, JSON_NUMERIC_CHECK); ?>
+          type: "pie",
+          indexLabel: "{y}",
+          yValueFormatString: "#,##0.00 PLN",
+          indexLabelPlacement: "inside",
+          indexLabelFontColor: "#36454F",
+          indexLabelFontSize: 18,
+          indexLabelFontWeight: "bolder",
+          showInLegend: true,
+          legendText: "{x}",
+          dataPoints: <?php echo json_encode($dataPointsWithExpanses, JSON_NUMERIC_CHECK); ?>
+        }]
+      });
+      chart.render();
+
+
+
+      var chart = new CanvasJS.Chart("chartWithIncomes", {
+        theme: "light2",
+        animationEnabled: true,
+        title: {
+          text: "Przychody w podziale na kategorie dla wybranego okresu"
+        },
+        data: [{
+          type: "pie",
+          indexLabel: "{y}",
+          yValueFormatString: "#,##0.00 PLN",
+          indexLabelPlacement: "inside",
+          indexLabelFontColor: "#36454F",
+          indexLabelFontSize: 18,
+          indexLabelFontWeight: "bolder",
+          showInLegend: true,
+          legendText: "{x}",
+          dataPoints: <?php echo json_encode($dataPointsWithIncomes, JSON_NUMERIC_CHECK); ?>
         }]
       });
       chart.render();

@@ -31,6 +31,8 @@ if (isset($_POST['nick'])) {
           alert('Udało Ci się zalogować!');
           window.location.href='./menu.php';
           </script>";
+        } else {
+          $_SESSION['error'] = 'Nieprawidłowy login lub hasło.';
         }
       } else {
         $_SESSION['error'] = 'Nieprawidłowy login lub hasło.';
