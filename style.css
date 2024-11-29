@@ -46,6 +46,10 @@ table {
   color: red;
 }
 
+.neutral-message {
+  color: orange;
+}
+
 .error {
   color: red;
 }

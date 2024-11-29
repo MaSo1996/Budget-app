@@ -141,7 +141,7 @@ if (isset($_POST['timePeriod'])) {
     <div class="col text-end mt-3">
       <form method="post">
         <div>
-          <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="timePeriod" id="timePeriod" required>
+          <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="timePeriod" id="timePeriod" required onchange="showAnotherDiv()">
             <option value="" disabled selected>Wybierz okres czasu</option>
             <option value="currentMonth">Bieżący miesiąc</option>
             <option value="previousMonth">Poprzedni miesiąc</option>
@@ -149,7 +149,7 @@ if (isset($_POST['timePeriod'])) {
             <option value="custom">Niestandardowy</option>
           </select>
         </div>
-        <div id="divToDisplay">
+        <div id="divToDisplay" hidden>
           <div class="col">
             <div class="row mb-3 justify-content-end text-center">
               <div class="col-3">
@@ -288,7 +288,7 @@ if (isset($_POST['timePeriod'])) {
 
               foreach ($result as $row) {
                 array_push($arrayWithExpanses, array("Expanse Category" => $row['expandCategory'], "Amount" => $row['round(sum(expanses.amount),2)']));
-                array_push($dataPointsWithExpanses,array("label" => $row['expandCategory'], "y" => $row['round(sum(expanses.amount),2)']));
+                array_push($dataPointsWithExpanses, array("label" => $row['expandCategory'], "y" => $row['round(sum(expanses.amount),2)']));
               }
             }
           } catch (PDOException $e) {
@@ -360,29 +360,33 @@ if (isset($_POST['timePeriod'])) {
         ?>
       </p>
       <?php
-          if ($balance >= 0) { ?>
+          if ($balance > 0) { ?>
         <p class="positive-message">Gratulacje! Świetnie zarządzasz swoim budżetem!</p>
-      <?php } else { ?>
+      <?php } else if ($balance < 0) { ?>
         <p class="negative-message">Uważaj! Twoje wydatki są większe niż wpływy!</p>'
+      <?php } else if ($balance == 0) { ?>
+        <p class="neutral-message">Twoje wpływy i wydatki się blilansują.</p>'
     <?php }
         }
     ?>
     </div>
     <div class="row">
-      <div class="col-sm-6">
-        <div id="chartWithIncomes" style="width: 100%; min-height: 450px"></div>
-      </div>
-      <div class="col-sm-6">
-        <div id="chartWithExpanses" style="width: 100%; min-height: 450px"></div>
-      </div>
+      <?php if (!empty($dataPointsWithIncomes)) { ?>
+        <div class="col-sm-6">
+          <div id="chartWithIncomes" style="width: 100%; min-height: 450px"></div>
+        </div>
+      <?php } ?>
+      <?php if (!empty($dataPointsWithExpanses)) { ?>
+        <div class="col-sm-6">
+          <div id="chartWithExpanses" style="width: 100%; min-height: 450px"></div>
+        </div>
+      <?php } ?>
     </div>
   </div>
   <script src="./script.js"></script>
 
   <script>
     window.onload = function() {
-
-
       var chart = new CanvasJS.Chart("chartWithExpanses", {
         theme: "light2",
         animationEnabled: true,
@@ -404,8 +408,6 @@ if (isset($_POST['timePeriod'])) {
       });
       chart.render();
 
-
-
       var chart = new CanvasJS.Chart("chartWithIncomes", {
         theme: "light2",
         animationEnabled: true,
@@ -426,7 +428,6 @@ if (isset($_POST['timePeriod'])) {
         }]
       });
       chart.render();
-
     }
   </script>
 </body>

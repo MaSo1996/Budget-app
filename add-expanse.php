@@ -54,7 +54,6 @@ if (isset($_POST['amount'])) {
         $pdo = null;
         echo "<script>
         alert('Wydatek został dodany');
-        window.location.href='./menu.php';
         </script>";
       }
     } catch (PDOException $e) {
