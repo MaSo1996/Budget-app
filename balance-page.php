@@ -226,7 +226,7 @@ if (isset($_POST['timePeriod'])) {
 
               foreach ($result as $row) {
                 array_push($arrayWithIncomes, array("Income Category" => $row['incomeCategory'], "Amount" => $row['round(sum(incomes.amount),2)']));
-                array_push($dataPointsWithIncomes, array("x" => $row['incomeCategory'], "y" => $row['round(sum(incomes.amount),2)']));
+                array_push($dataPointsWithIncomes, array("label" => $row['incomeCategory'], "y" => $row['round(sum(incomes.amount),2)']));
               }
             }
           } catch (PDOException $e) {
@@ -288,7 +288,7 @@ if (isset($_POST['timePeriod'])) {
 
               foreach ($result as $row) {
                 array_push($arrayWithExpanses, array("Expanse Category" => $row['expandCategory'], "Amount" => $row['round(sum(expanses.amount),2)']));
-                array_push($dataPointsWithExpanses,array("x" => $row['expandCategory'], "y" => $row['round(sum(expanses.amount),2)']));
+                array_push($dataPointsWithExpanses,array("label" => $row['expandCategory'], "y" => $row['round(sum(expanses.amount),2)']));
               }
             }
           } catch (PDOException $e) {
@@ -398,7 +398,7 @@ if (isset($_POST['timePeriod'])) {
           indexLabelFontSize: 18,
           indexLabelFontWeight: "bolder",
           showInLegend: true,
-          legendText: "{x}",
+          legendText: "{label}",
           dataPoints: <?php echo json_encode($dataPointsWithExpanses, JSON_NUMERIC_CHECK); ?>
         }]
       });
@@ -421,7 +421,7 @@ if (isset($_POST['timePeriod'])) {
           indexLabelFontSize: 18,
           indexLabelFontWeight: "bolder",
           showInLegend: true,
-          legendText: "{x}",
+          legendText: "{label}",
           dataPoints: <?php echo json_encode($dataPointsWithIncomes, JSON_NUMERIC_CHECK); ?>
         }]
       });
