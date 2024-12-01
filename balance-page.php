@@ -48,6 +48,8 @@ if (isset($_POST['timePeriod'])) {
   } else if ($timePeriod == 'custom') {
     $beginOfTimePeriod = $_POST['beginOfTimePeriod'];
     $endOfTimePeriod = $_POST['endOfTimePeriod'];
+    $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod) + 86400;
+    $endOfTimePeriod = date("Y-m-d", $endOfTimePeriodAsTimestamp);
   }
 
   $validationSuccess = true;
@@ -61,9 +63,6 @@ if (isset($_POST['timePeriod'])) {
     $_SESSION['eEndOfTimePeriod'] = "Podaj poprawną datę";
     $validationSuccess = false;
   }
-
-  $beginOfTimePeriodAsTimestamp = strtotime($beginOfTimePeriod);
-  $endOfTimePeriodAsTimestamp = strtotime($endOfTimePeriod);
 
   $_SESSION['frTimePeriod'] = $timePeriod;
   if (isset($beginOfTimePeriodAsTimestamp)) {
