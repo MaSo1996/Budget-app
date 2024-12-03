@@ -73,9 +73,7 @@ if (isset($_POST['email'])) {
           password varchar(255),
           PRIMARY KEY (userId)
       )");
-    }
 
-    if ($pdo) {
       $whatToLookFor = $pdo->query("SELECT users.email from users where users.email like '$email'");
 
       $howManyEmails = $whatToLookFor->rowCount();

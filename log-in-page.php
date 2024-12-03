@@ -1,9 +1,22 @@
 <?php
+
 session_start();
 
 if (isset($_POST['nick'])) {
 
   require 'config.php';
+
+  $dsn = "mysql:host=$host;charset=UTF8";
+
+  try {
+    $pdo = new PDO($dsn, $user, $password);
+
+    if ($pdo) {
+      $pdo->query("create database if not exists $db");
+    }
+  } catch (PDOException $e) {
+    echo $e->getMessage();
+  }
 
   $nick = $_POST['nick'];
   $accountPassword = $_POST['accountPassword'];
@@ -14,6 +27,16 @@ if (isset($_POST['nick'])) {
     $pdo = new PDO($dsn, $user, $password);
 
     if ($pdo) {
+
+      $pdo->query("CREATE TABLE IF NOT EXISTS users
+      (
+          userId int not null AUTO_INCREMENT,
+          email varchar(255),
+          name varchar(255),
+          password varchar(255),
+          PRIMARY KEY (userId)
+      )");
+
       $query = $pdo->prepare("SELECT * from users where users.name = ?");
 
       $query->execute(array($nick));
