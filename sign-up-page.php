@@ -47,34 +47,15 @@ if (isset($_POST['email'])) {
 
   require 'config.php';
 
-  $dsn = "mysql:host=$host;charset=UTF8";
-
-  try {
-    $pdo = new PDO($dsn, $user, $password);
-
-    if ($pdo) {
-      $pdo->query("create database if not exists $db");
-    }
-  } catch (PDOException $e) {
-    echo $e->getMessage();
-  }
-
   $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
 
   try {
     $pdo = new PDO($dsn, $user, $password);
 
     if ($pdo) {
-      $pdo->query("CREATE TABLE IF NOT EXISTS users
-      (
-          userId int not null AUTO_INCREMENT,
-          email varchar(255),
-          name varchar(255),
-          password varchar(255),
-          PRIMARY KEY (userId)
-      )");
 
-      $whatToLookFor = $pdo->query("SELECT users.email from users where users.email like '$email'");
+      $whatToLookFor = $pdo->prepare("SELECT users.email from users where users.email = ?");
+      $whatToLookFor->execute([$email]);
 
       $howManyEmails = $whatToLookFor->rowCount();
 
@@ -83,7 +64,8 @@ if (isset($_POST['email'])) {
         $_SESSION['eEmail'] = "Istnieje już konto przypisane do tego adresu e-mail.";
       }
 
-      $whatToLookFor = $pdo->query("SELECT users.name from users where users.name like '$nick'");
+      $whatToLookFor = $pdo->prepare("SELECT users.username from users where users.username = ?");
+      $whatToLookFor->execute([$nick]);
 
       $howManyNicks = $whatToLookFor->rowCount();
 
@@ -93,8 +75,21 @@ if (isset($_POST['email'])) {
       }
 
       if ($validationSuccess) {
-        $pdo->query("INSERT INTO users VALUES(null,'$email','$nick','$passwordHash')");
+        $query = $pdo->prepare("INSERT INTO users VALUES(?, ?, ?, ?)");
+        $query->execute([null, $nick, $passwordHash, $email]);
         $_SESSION['registrationSuccessfull'] = true;
+
+        $query = $pdo->prepare("SELECT users.id FROM users WHERE users.username = ?");
+        $query->execute([$nick]);
+
+        $result = $query->fetch();
+        $userId = $result[0];
+
+        $query = $pdo->prepare("INSERT INTO expenses_category_assigned_to_users (expenses_category_assigned_to_users.id, expenses_category_assigned_to_users.user_id, expenses_category_assigned_to_users.name)
+                                SELECT expenses_category_default.id, ?, expenses_category_default.name
+                                FROM expenses_category_default");
+
+        $query->execute([$userId]);
 
         $pdo = null;
 
