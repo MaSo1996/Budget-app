@@ -75,8 +75,9 @@ if (isset($_POST['email'])) {
       }
 
       if ($validationSuccess) {
-        $query = $pdo->prepare("INSERT INTO users VALUES(?, ?, ?, ?)");
-        $query->execute([null, $nick, $passwordHash, $email]);
+        $query = $pdo->prepare("INSERT INTO users (users.username, users.password, users.email)
+                                VALUES(?, ?, ?)");
+        $query->execute([$nick, $passwordHash, $email]);
         $_SESSION['registrationSuccessfull'] = true;
 
         $query = $pdo->prepare("SELECT users.id FROM users WHERE users.username = ?");
@@ -85,9 +86,21 @@ if (isset($_POST['email'])) {
         $result = $query->fetch();
         $userId = $result[0];
 
-        $query = $pdo->prepare("INSERT INTO expenses_category_assigned_to_users (expenses_category_assigned_to_users.id, expenses_category_assigned_to_users.user_id, expenses_category_assigned_to_users.name)
-                                SELECT expenses_category_default.id, ?, expenses_category_default.name
+        $query = $pdo->prepare("INSERT INTO payment_methods_assigned_to_users (payment_methods_assigned_to_users.user_id, payment_methods_assigned_to_users.name)
+                                SELECT ?, payment_methods_default.name
+                                FROM payment_methods_default");
+
+        $query->execute([$userId]);
+
+        $query = $pdo->prepare("INSERT INTO expenses_category_assigned_to_users (expenses_category_assigned_to_users.user_id, expenses_category_assigned_to_users.name)
+                                SELECT ?, expenses_category_default.name
                                 FROM expenses_category_default");
+
+        $query->execute([$userId]);
+
+        $query = $pdo->prepare("INSERT INTO incomes_category_assigned_to_users (incomes_category_assigned_to_users.user_id, incomes_category_assigned_to_users.name)
+                                SELECT ?, incomes_category_default.name
+                                FROM incomes_category_default");
 
         $query->execute([$userId]);
 
