@@ -37,7 +37,7 @@ if (isset($_POST['nick'])) {
           PRIMARY KEY (userId)
       )");
 
-      $query = $pdo->prepare("SELECT * from users where users.name = ?");
+      $query = $pdo->prepare("SELECT * from users where users.username = ?");
 
       $query->execute(array($nick));
 
@@ -48,7 +48,7 @@ if (isset($_POST['nick'])) {
         $fetch = $query->fetch();
 
         if (password_verify($accountPassword, $fetch['password'])) {
-          $_SESSION['loggedUser'] = $fetch['userId'];
+          $_SESSION['loggedUser'] = $fetch['id'];
           $pdo = null;
           echo "<script>
           alert('Udało Ci się zalogować!');
