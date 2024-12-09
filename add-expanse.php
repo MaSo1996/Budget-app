@@ -36,21 +36,10 @@ if (isset($_POST['amount'])) {
     try {
       $pdo = new PDO($dsn, $user, $password);
 
-      $pdo->query("CREATE TABLE IF NOT EXISTS expanses
-      (
-          transactionId int not null AUTO_INCREMENT,
-          userId int(255),
-          amount float,
-          date date,
-          comment varchar(255),
-          paymentMethod varchar(255),
-          expandCategory varchar(255),
-          PRIMARY KEY (transactionId)
-      )");
-
       if ($pdo) {
-        $query = $pdo->prepare("INSERT INTO expanses VALUES(null,'$loggedUser','$amount','$date','$comment','$paymentMethod','$expandCategory')");
-        $query->execute();
+        $query = $pdo->prepare("INSERT INTO expenses (expenses.user_id,expenses.expense_category_assigned_to_user_id,expenses.payment_method_assigned_to_user_id,expenses.amount,expenses.date_of_expense,expenses.expense_comment)
+                                VALUES (?,?,?,?,?,?)");
+        $query->execute([$loggedUser,$expandCategory,$paymentMethod,$amount,$date,$comment]);
         $pdo = null;
         echo "<script>
         alert('Wydatek został dodany');

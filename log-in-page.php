@@ -28,18 +28,9 @@ if (isset($_POST['nick'])) {
 
     if ($pdo) {
 
-      $pdo->query("CREATE TABLE IF NOT EXISTS users
-      (
-          userId int not null AUTO_INCREMENT,
-          email varchar(255),
-          name varchar(255),
-          password varchar(255),
-          PRIMARY KEY (userId)
-      )");
-
       $query = $pdo->prepare("SELECT * from users where users.username = ?");
 
-      $query->execute(array($nick));
+      $query->execute([$nick]);
 
       $row = $query->rowCount();
 

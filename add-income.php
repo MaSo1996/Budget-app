@@ -35,20 +35,10 @@ if (isset($_POST['amount'])) {
     try {
       $pdo = new PDO($dsn, $user, $password);
 
-      $pdo->query("CREATE TABLE IF NOT EXISTS incomes
-      (
-          transactionId int not null AUTO_INCREMENT,
-          userId int(255),
-          amount float,
-          date date,
-          comment varchar(255),
-          incomeCategory varchar(255),
-          PRIMARY KEY (transactionId)
-      )");
-
       if ($pdo) {
-        $query = $pdo->prepare("INSERT INTO incomes VALUES(null,'$loggedUser','$amount','$date','$comment','$incomeCategory')");
-        $query->execute();
+        $query = $pdo->prepare("INSERT INTO incomes (incomes.user_id, incomes.income_category_assigned_to_user_id, incomes.amount, incomes.date_of_income, incomes.income_comment)
+                                VALUES (?,?,?,?,?)");
+        $query->execute([$loggedUser,$incomeCategory,$amount,$date,$comment]);
         $pdo = null;
         echo "<script>
         alert('Przychód został dodany');
