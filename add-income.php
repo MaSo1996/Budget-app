@@ -45,6 +45,12 @@ if (isset($_POST['amount'])) {
                                 VALUES (?,?,?,?,?)");
         $query->execute([$loggedUser, $incomeCategory, $amount, $date, $comment]);
         $pdo = null;
+
+        unset($_SESSION['frDate']);
+        unset($_SESSION['frComment']);
+        unset($_SESSION['frIncomeCategory']);
+        unset($_SESSION['frAmount']);
+
         echo "<script>
         alert('Przychód został dodany');
         </script>";

@@ -26,7 +26,13 @@ if (isset($_POST['amount'])) {
   $date = $_POST['date'];
   $comment = $_POST['comment'];
   $paymentMethod = $_POST['paymentMethod'];
-  $expandCategory = $_POST['expandCategory'];
+  $expenseCategory = $_POST['expenseCategory'];
+
+  $_SESSION['frDate'] = $date;
+  $_SESSION['frComment'] = $comment;
+  $_SESSION['frExpenseCategory'] = $expenseCategory;
+  $_SESSION['frPaymentMethod'] = $paymentMethod;
+  $_SESSION['frAmount'] = $amount;
 
   require 'config.php';
 
@@ -39,8 +45,15 @@ if (isset($_POST['amount'])) {
       if ($pdo) {
         $query = $pdo->prepare("INSERT INTO expenses (expenses.user_id,expenses.expense_category_assigned_to_user_id,expenses.payment_method_assigned_to_user_id,expenses.amount,expenses.date_of_expense,expenses.expense_comment)
                                 VALUES (?,?,?,?,?,?)");
-        $query->execute([$loggedUser,$expandCategory,$paymentMethod,$amount,$date,$comment]);
+        $query->execute([$loggedUser,$expenseCategory,$paymentMethod,$amount,$date,$comment]);
         $pdo = null;
+
+        unset($_SESSION['frDate']);
+        unset($_SESSION['frComment']);
+        unset($_SESSION['frExpenseCategory']);
+        unset($_SESSION['frPaymentMethod']);
+        unset($_SESSION['frAmount']);
+      
         echo "<script>
         alert('Wydatek został dodany');
         </script>";
@@ -123,11 +136,14 @@ if (isset($_POST['amount'])) {
         <div class="col-sm-6">
           <div class="mb-3 mt-3">
             <label for="exampleFormControlInput1" class="form-label">Kwota</label>
-            <input
+            <input value="<?php
+                          if (isset($_SESSION['frAmount'])) {
+                            echo $_SESSION['frAmount'];
+                            unset($_SESSION['frAmount']);
+                          } ?>"
               type="text"
               class="form-control"
               id="exampleFormControlInput1"
-              placeholder="12.14"
               name="amount" />
             <div class="error">
               <?php
@@ -142,11 +158,16 @@ if (isset($_POST['amount'])) {
           </div>
           <div class="mb-3">
             <label for="dateOfExpanse" class="form-label">Data</label>
-            <input
+            <input value="<?php
+                          if (isset($_SESSION['frDate'])) {
+                            echo $_SESSION['frDate'];
+                            unset($_SESSION['frDate']);
+                          } else {
+                            echo date('Y-m-d');
+                          } ?>"
               type="date"
               class="form-control"
               id="dateOfExpanse"
-              placeholder="2024.12.12"
               name="date" />
             <div class="error">
               <?php
@@ -161,7 +182,11 @@ if (isset($_POST['amount'])) {
           </div>
           <div class="mb-3">
             <label for="comment" class="form-label">Komentarz</label>
-            <input
+            <input value="<?php
+                          if (isset($_SESSION['frComment'])) {
+                            echo $_SESSION['frComment'];
+                            unset($_SESSION['frComment']);
+                          } ?>"
               type="text"
               class="form-control"
               id="comment"
@@ -173,31 +198,40 @@ if (isset($_POST['amount'])) {
           <div class="col">
             <div>
               <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="paymentMethod" id="paymentMethod" required>
-                <option value="" disabled selected>Wybierz sposób płatności</option>
-                <option value="Gotówka">Gotówka</option>
-                <option value="Karta debetowa">Karta debetowa</option>
-                <option value="Karta kredytowa">Karta kredytowa</option>
+              <?php if (isset($_SESSION['frPaymentMethod'])) {
+                  echo '<option value="" disabled >Wybierz metodę płatności</option>';
+                  foreach ($_SESSION['arrayWithPaymentMethods'] as $row) {
+                    if ($row['user_id'] == $_SESSION['frPaymentMethod']) {
+                      echo '<option selected value="' . $row['user_id'] . '">' . $row['name'];
+                    } else {
+                      echo '<option value="' . $row['user_id'] . '">' . $row['name'];
+                    }
+                  }
+                } else {
+                  echo '<option value="" disabled selected >Wybierz metodę płatności</option>';
+                  foreach ($_SESSION['arrayWithPaymentMethods'] as $row) {
+                    echo '<option value="' . $row['user_id'] . '">' . $row['name'];
+                  }
+                } ?>
               </select>
             </div>
             <div>
-              <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="expandCategory" id="expandCategory" required>
-                <option value="" disabled selected>Wybierz kategorię wydatku</option>
-                <option value="Jedzenie">Jedzenie</option>
-                <option value="Mieszkanie">Mieszkanie</option>
-                <option value="Transport">Transport</option>
-                <option value="Telekomunikacja">Telekomunikacja</option>
-                <option value="Opieka zdrowotna">Opieka zdrowotna</option>
-                <option value="Ubranie">Ubranie</option>
-                <option value="Higiena">Higiena</option>
-                <option value="Dzieci">Dzieci</option>
-                <option value="Rozrywka">Rozrywka</option>
-                <option value="Wycieczka">Wycieczka</option>
-                <option value="Szkolenia">Szkolenia</option>
-                <option value="Książki">Książki</option>
-                <option value="Na złotą jesień, czyli emeryturę">Na złotą jesień, czyli emeryturę</option>
-                <option value="Spłata długów">Spłata długów</option>
-                <option value="Darowizna">Darowizna</option>
-                <option value="Inne wydatki">Inne wydatki</option>
+              <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="expenseCategory" id="expenseCategory" required>
+              <?php if (isset($_SESSION['frExpenseCategory'])) {
+                  echo '<option value="" disabled >Wybierz kategorię wydatku</option>';
+                  foreach ($_SESSION['arrayWithExpenseCategories'] as $row) {
+                    if ($row['user_id'] == $_SESSION['frExpenseCategory']) {
+                      echo '<option selected value="' . $row['user_id'] . '">' . $row['name'];
+                    } else {
+                      echo '<option value="' . $row['user_id'] . '">' . $row['name'];
+                    }
+                  }
+                } else {
+                  echo '<option value="" disabled selected >Wybierz kategorię wydatku</option>';
+                  foreach ($_SESSION['arrayWithExpenseCategories'] as $row) {
+                    echo '<option value="' . $row['user_id'] . '">' . $row['name'];
+                  }
+                } ?>
               </select>
             </div>
           </div>
