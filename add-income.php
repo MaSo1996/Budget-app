@@ -10,8 +10,8 @@ $validationSuccess = true;
 
 if (isset($_POST['amount'])) {
 
-  $amount = str_replace(',','.',$_POST['amount']);
-  
+  $amount = str_replace(',', '.', $_POST['amount']);
+
   if (!is_numeric($amount)) {
     $_SESSION['eAmount'] = 'Podaj kwotę we właściwym formacie.';
     $validationSuccess = false;
@@ -27,6 +27,11 @@ if (isset($_POST['amount'])) {
   $comment = $_POST['comment'];
   $incomeCategory = $_POST['incomeCategory'];
 
+  $_SESSION['frDate'] = $date;
+  $_SESSION['frComment'] = $comment;
+  $_SESSION['frIncomeCategory'] = $incomeCategory;
+  $_SESSION['frAmount'] = $amount;
+
   require 'config.php';
 
   $dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
@@ -38,7 +43,7 @@ if (isset($_POST['amount'])) {
       if ($pdo) {
         $query = $pdo->prepare("INSERT INTO incomes (incomes.user_id, incomes.income_category_assigned_to_user_id, incomes.amount, incomes.date_of_income, incomes.income_comment)
                                 VALUES (?,?,?,?,?)");
-        $query->execute([$loggedUser,$incomeCategory,$amount,$date,$comment]);
+        $query->execute([$loggedUser, $incomeCategory, $amount, $date, $comment]);
         $pdo = null;
         echo "<script>
         alert('Przychód został dodany');
@@ -72,7 +77,7 @@ if (isset($_POST['amount'])) {
 </head>
 
 <body>
-<nav
+  <nav
     class="navbar navbar-expand-sm navbar-dark bg-dark"
     aria-label="Third navbar example">
     <div class="container-fluid">
@@ -121,12 +126,15 @@ if (isset($_POST['amount'])) {
       <div class="row justify-content-center">
         <div class="col-sm-6">
           <div class="mb-3 mt-3">
-            <label for="exampleFormControlInput1" class="form-label">Kwota</label>
-            <input
+            <label for="amount" class="form-label">Kwota</label>
+            <input value="<?php
+                          if (isset($_SESSION['frAmount'])) {
+                            echo $_SESSION['frAmount'];
+                            unset($_SESSION['frAmount']);
+                          } ?>"
               type="text"
               class="form-control"
-              id="exampleFormControlInput1"
-              placeholder="12.14"
+              id="amount"
               name="amount" />
             <div class="error">
               <?php
@@ -141,11 +149,16 @@ if (isset($_POST['amount'])) {
           </div>
           <div class="mb-3">
             <label for="dateOfExpanse" class="form-label">Data</label>
-            <input
+            <input value="<?php
+                          if (isset($_SESSION['frDate'])) {
+                            echo $_SESSION['frDate'];
+                            unset($_SESSION['frDate']);
+                          } else {
+                            echo date('Y-m-d');
+                          } ?>"
               type="date"
               class="form-control"
               id="dateOfExpanse"
-              placeholder="2024.12.12"
               name="date" />
             <div class="error">
               <?php
@@ -160,7 +173,11 @@ if (isset($_POST['amount'])) {
           </div>
           <div class="mb-3">
             <label for="comment" class="form-label">Komentarz</label>
-            <input
+            <input value="<?php
+                          if (isset($_SESSION['frComment'])) {
+                            echo $_SESSION['frComment'];
+                            unset($_SESSION['frComment']);
+                          } ?>"
               type="text"
               class="form-control"
               id="comment"
@@ -172,11 +189,21 @@ if (isset($_POST['amount'])) {
           <div class="col">
             <div>
               <select class="btn btn-primary btn-lg px-4 me-sm-3 mb-3" name="incomeCategory" id="incomeCategory" required>
-                <option value="" disabled selected>Wybierz kategorię przychodu</option>
-                <option value="Wynagrodzenie">Wynagrodzenie</option>
-                <option value="Odsetki_bankowe">Odsetki bankowe</option>
-                <option value="Sprzedaz_na_allegro">Sprzedaz na allegro</option>
-                <option value="Inne">Inne</option>
+                <?php if (isset($_SESSION['frIncomeCategory'])) {
+                  echo '<option value="" disabled >Wybierz kategorię przychodu</option>';
+                  foreach ($_SESSION['arrayWithIncomeCategories'] as $row) {
+                    if ($row['user_id'] == $_SESSION['frIncomeCategory']) {
+                      echo '<option selected value="' . $row['user_id'] . '">' . $row['name'];
+                    } else {
+                      echo '<option value="' . $row['user_id'] . '">' . $row['name'];
+                    }
+                  }
+                } else {
+                  echo '<option value="" disabled selected >Wybierz kategorię przychodu</option>';
+                  foreach ($_SESSION['arrayWithIncomeCategories'] as $row) {
+                    echo '<option value="' . $row['user_id'] . '">' . $row['name'];
+                  }
+                } ?>
               </select>
             </div>
           </div>

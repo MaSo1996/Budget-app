@@ -40,6 +40,53 @@ if (isset($_POST['nick'])) {
 
         if (password_verify($accountPassword, $fetch['password'])) {
           $_SESSION['loggedUser'] = $fetch['id'];
+          $loggedUser = $_SESSION['loggedUser'];
+
+          // Ładowane kategorii przychodu danego użytkownika
+
+          $_SESSION['arrayWithIncomeCategories'] = array();
+
+          $query = $pdo->prepare("SELECT *
+                                  FROM incomes_category_assigned_to_users
+                                  WHERE incomes_category_assigned_to_users.user_id = ?");
+          $query->execute([$loggedUser]);
+
+          $result = $query->fetchAll();
+
+          foreach ($result as $row) {
+            array_push($_SESSION['arrayWithIncomeCategories'], array("user_id" => $row['id'], "name" => $row['name']));
+          }
+
+          // Ładowane kategorii wydatków danego użytkownika
+
+          $_SESSION['arrayWithExpenseCategories'] = array();
+
+          $query = $pdo->prepare("SELECT *
+                                  FROM expenses_category_assigned_to_users
+                                  WHERE expenses_category_assigned_to_users.user_id = ?");
+          $query->execute([$loggedUser]);
+
+          $result = $query->fetchAll();
+
+          foreach ($result as $row) {
+            array_push($_SESSION['arrayWithExpenseCategories'], array("user_id" => $row['id'], "name" => $row['name']));
+          }
+
+          // Ładowane sposobów płatności danego użytkownika
+
+          $_SESSION['arrayWithPaymentMethods'] = array();
+
+          $query = $pdo->prepare("SELECT *
+                                  FROM payment_methods_assigned_to_users
+                                  WHERE payment_methods_assigned_to_users.user_id = ?");
+          $query->execute([$loggedUser]);
+
+          $result = $query->fetchAll();
+
+          foreach ($result as $row) {
+            array_push($_SESSION['arrayWithPaymentMethods'], array("user_id" => $row['id'], "name" => $row['name']));
+          }
+
           $pdo = null;
           echo "<script>
           alert('Udało Ci się zalogować!');
