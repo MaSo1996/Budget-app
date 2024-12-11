@@ -1,28 +1,25 @@
 <?php
 
-	session_start();
-	
-	if (!isset($_SESSION['registrationSuccessfull']))
-	{
-		header('Location: index.php');
-		exit();
-	}
-	else
-	{
-		unset($_SESSION['registrationSuccessfull']);
-	}
-	
-	//Usuwanie zmiennych pamiętających wartości wpisane do formularza
-	if (isset($_SESSION['frEmail'])) unset($_SESSION['frEmail']);
-	if (isset($_SESSION['frNick'])) unset($_SESSION['frNick']);
-	if (isset($_SESSION['frPassword1'])) unset($_SESSION['frPassword1']);
-	if (isset($_SESSION['frPassword2'])) unset($_SESSION['frPassword2']);
-	
-	//Usuwanie błędów rejestracji
-	if (isset($_SESSION['eEmail'])) unset($_SESSION['eEmail']);
-	if (isset($_SESSION['eNick'])) unset($_SESSION['eNick']);
-	if (isset($_SESSION['ePassword'])) unset($_SESSION['ePassword']);
-	
+session_start();
+
+if (!isset($_SESSION['registrationSuccessfull'])) {
+  header('Location: index.php');
+  exit();
+} else {
+  unset($_SESSION['registrationSuccessfull']);
+}
+
+//Usuwanie zmiennych pamiętających wartości wpisane do formularza
+if (isset($_SESSION['frEmail'])) unset($_SESSION['frEmail']);
+if (isset($_SESSION['frNick'])) unset($_SESSION['frNick']);
+if (isset($_SESSION['frPassword1'])) unset($_SESSION['frPassword1']);
+if (isset($_SESSION['frPassword2'])) unset($_SESSION['frPassword2']);
+
+//Usuwanie błędów rejestracji
+if (isset($_SESSION['eEmail'])) unset($_SESSION['eEmail']);
+if (isset($_SESSION['eNick'])) unset($_SESSION['eNick']);
+if (isset($_SESSION['ePassword'])) unset($_SESSION['ePassword']);
+
 ?>
 
 <!DOCTYPE html>
@@ -45,50 +42,6 @@
 </head>
 
 <body>
-<nav
-    class="navbar navbar-expand-sm navbar-dark bg-dark"
-    aria-label="Third navbar example">
-    <div class="container-fluid">
-      <button
-        class="navbar-toggler collapsed"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarsExample03"
-        aria-controls="navbarsExample03"
-        aria-expanded="false"
-        aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="navbar-collapse collapse" id="navbarsExample03">
-        <ul class="navbar-nav me-auto mb-2 mb-sm-0">
-          <li class="nav-item">
-            <a class="nav-link" href="./index.php">Strona główna</a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="./sign-up-page.php">Rejestracja</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./log-in-page.php">Logowanie</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./menu.php">Menu główne</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./add-expense.php">Dodaj wydatek</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./add-income.php">Dodaj przychód</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./balance-page.php">Przeglądaj bilans</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
   <!-- Welcome page -->
   <div class="container main-container align-items-center">
     <div class="col px-4 pt-5 my-5 text-center border-bottom">
