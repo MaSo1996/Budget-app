@@ -225,11 +225,13 @@ if (isset($_POST['timePeriod'])) {
 
           if ($pdo) {
 
-            $query = $pdo->prepare("SELECT incomes.income_category_assigned_to_user_id as 'Income Category', SUM(incomes.amount) as 'Sum of amounts'
-                                      FROM incomes
-                                      WHERE incomes.user_id = ? and incomes.date_of_income >= ? and incomes.date_of_income < ?
-                                      GROUP BY 'Income Category'
-                                      ORDER BY 'Sum of amounts' DESC");
+            $query = $pdo->prepare("SELECT incomes.income_category_assigned_to_user_id, incomes.user_id, incomes_category_assigned_to_users.name as 'Income Category', SUM(incomes.amount) as 'Sum of Incomes'
+                                    FROM incomes
+                                    LEFT JOIN incomes_category_assigned_to_users
+                                    ON incomes_category_assigned_to_users.id = incomes.id
+                                    WHERE incomes.user_id = ? and incomes.date_of_income >= ? and incomes.date_of_income < ?
+                                    GROUP BY incomes_category_assigned_to_users.name
+                                    ORDER BY 'Sum of Incomes' DESC");
             $query->execute([$_SESSION['loggedUser'], $beginOfTimePeriod, $endOfTimePeriod]);
 
             $arrayWithIncomes = array();
@@ -238,8 +240,8 @@ if (isset($_POST['timePeriod'])) {
             $result = $query->fetchAll();
 
             foreach ($result as $row) {
-              array_push($arrayWithIncomes, array("Income Category" => $row['Income Category'], "Sum of amounts" => $row['Sum of amounts']));
-              array_push($dataPointsWithIncomes, array("label" => $row['Income Category'], "y" => $row['Sum of amounts']));
+              array_push($arrayWithIncomes, array("Income Category" => $row['Income Category'], "Sum of Incomes" => $row['Sum of Incomes']));
+              array_push($dataPointsWithIncomes, array("label" => $row['Income Category'], "y" => $row['Sum of Incomes']));
             }
           }
         } catch (PDOException $e) {
@@ -260,7 +262,7 @@ if (isset($_POST['timePeriod'])) {
             ?>
               <tr>
                 <td><?php echo $row['Income Category']; ?></td>
-                <td><?php echo $row['Sum of amounts']; ?></td>
+                <td><?php echo $row['Sum of Incomes']; ?></td>
               </tr>
             <?php
             } ?>
@@ -279,11 +281,13 @@ if (isset($_POST['timePeriod'])) {
 
           if ($pdo) {
 
-            $query = $pdo->prepare("SELECT expenses.expense_category_assigned_to_user_id as 'Expense Category', sum(expenses.amount) as 'Sum of amounts'
-                                      FROM expenses
-                                      WHERE expenses.user_id = ? and expenses.date_of_expense >= ? and expenses.date_of_expense < ?
-                                      GROUP BY 'Expense Category'
-                                      ORDER BY 'Sum of amounts'");
+            $query = $pdo->prepare("SELECT expenses.expense_category_assigned_to_user_id, expenses.user_id, expenses_category_assigned_to_users.name as 'Expense Category', SUM(expenses.amount) as 'Sum of Expenses'
+                                    FROM expenses
+                                    LEFT JOIN expenses_category_assigned_to_users
+                                    ON expenses_category_assigned_to_users.id = expenses.id
+                                    WHERE expenses.user_id = ? and expenses.date_of_expense >= ? and expenses.date_of_expense < ?
+                                    GROUP BY expenses_category_assigned_to_users.name
+                                    ORDER BY 'Sum of Expenses' DESC");
             $query->execute([$_SESSION['loggedUser'], $beginOfTimePeriod, $endOfTimePeriod]);
 
             $arrayWithExpanses = array();
@@ -292,8 +296,8 @@ if (isset($_POST['timePeriod'])) {
             $result = $query->fetchAll();
 
             foreach ($result as $row) {
-              array_push($arrayWithExpanses, array("Expense Category" => $row['Expense Category'], "Sum of amounts" => $row['Sum of amounts']));
-              array_push($dataPointsWithExpanses, array("label" => $row['Expense Category'], "y" => $row['Sum of amounts']));
+              array_push($arrayWithExpanses, array("Expense Category" => $row['Expense Category'], "Sum of Expenses" => $row['Sum of Expenses']));
+              array_push($dataPointsWithExpanses, array("label" => $row['Expense Category'], "y" => $row['Sum of Expenses']));
             }
           }
         } catch (PDOException $e) {
@@ -314,7 +318,7 @@ if (isset($_POST['timePeriod'])) {
           ?>
             <tr>
               <td><?php echo $row['Expense Category']; ?></td>
-              <td><?php echo $row['Sum of amounts']; ?></td>
+              <td><?php echo $row['Sum of Expenses']; ?></td>
             </tr>
           <?php
           } ?>
