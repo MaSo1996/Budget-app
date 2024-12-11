@@ -60,7 +60,7 @@ if (!isset($_SESSION['loggedUser'])) {
             <a class="nav-link active" aria-current="page" href="./menu.php">Menu główne</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./add-expanse.php">Dodaj wydatek</a>
+            <a class="nav-link" href="./add-expense.php">Dodaj wydatek</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="./add-income.php">Dodaj przychód</a>
