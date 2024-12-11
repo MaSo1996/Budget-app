@@ -46,17 +46,6 @@ if (!isset($_SESSION['loggedUser'])) {
       <div class="navbar-collapse collapse" id="navbarsExample03">
         <ul class="navbar-nav me-auto mb-2 mb-sm-0">
           <li class="nav-item">
-            <a class="nav-link" href="./index.php">Strona główna</a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="./sign-up-page.php">Rejestracja</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./log-in-page.php">Logowanie</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="./menu.php">Menu główne</a>
           </li>
           <li class="nav-item">
@@ -67,6 +56,9 @@ if (!isset($_SESSION['loggedUser'])) {
           </li>
           <li class="nav-item">
             <a class="nav-link" href="./balance-page.php">Przeglądaj bilans</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./log-out.php">Wyloguj się</a>
           </li>
         </ul>
       </div>
@@ -87,7 +79,7 @@ if (!isset($_SESSION['loggedUser'])) {
                   Dodaj przychód
                 </button>
               </a>
-              <a href="./add-expanse.php">
+              <a href="./add-expense.php">
                 <button
                   type="button"
                   class="btn btn-primary btn-lg px-4 me-sm-3 mb-3">

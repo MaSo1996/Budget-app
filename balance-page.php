@@ -89,7 +89,7 @@ if (isset($_POST['timePeriod'])) {
 </head>
 
 <body>
-  <nav
+<nav
     class="navbar navbar-expand-sm navbar-dark bg-dark"
     aria-label="Third navbar example">
     <div class="container-fluid">
@@ -107,27 +107,19 @@ if (isset($_POST['timePeriod'])) {
       <div class="navbar-collapse collapse" id="navbarsExample03">
         <ul class="navbar-nav me-auto mb-2 mb-sm-0">
           <li class="nav-item">
-            <a class="nav-link" href="./index.php">Strona główna</a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="./sign-up-page.php">Rejestracja</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./log-in-page.php">Logowanie</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="./menu.php">Menu główne</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./add-expanse.php">Dodaj wydatek</a>
+            <a class="nav-link" href="./add-expense.php">Dodaj wydatek</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="./add-income.php">Dodaj przychód</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="./balance-page.php">Przeglądaj bilans</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./log-out.php">Wyloguj się</a>
           </li>
         </ul>
       </div>
